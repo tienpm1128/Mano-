@@ -1,0 +1,166 @@
+@import '../../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  > .detail-wrap {
+    border-bottom: none !important;
+
+    table {
+      tr {
+        td {
+          &:last-of-type {
+            font-family: $sub-font;
+
+            a {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    .criteria {
+      padding: 15px;
+      border: 1px solid $border-color;
+      border-radius: 5px;
+
+      table {
+        tr {
+          td {
+            &:first-of-type {
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .table-wrap {
+    ::ng-deep table {
+      tbody {
+        tr {
+          cursor: pointer;
+          transition: 0.3s;
+
+          td {
+            &:last-of-type {
+              .col-action {
+                margin: 0 !important;
+                text-align: left;
+              }
+            }
+          }
+
+          &:hover {
+            background-color: $background-color;
+          }
+        }
+      }
+    }
+
+    .paging {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  .ui-dialog-content {
+    .ui-dropdown-panel {
+      bottom: 100%;
+      top: auto !important;
+      padding: 0;
+
+      .ui-dropdown-list {
+        padding: 5px;
+        background-color: white;
+      }
+    }
+  }
+
+  .table-wrap {
+    overflow: auto;
+    max-height: 40vh;
+
+    &#vimConnectionForm {
+      max-height: 60vh;
+      overflow: initial;
+    }
+
+    table {
+      margin: auto;
+
+      tr {
+        td {
+          padding: 8px 10px;
+
+          .key-value {
+            display: flex;
+
+            input[type='text'] {
+              min-width: 116px;
+              max-width: 116px;
+
+              &:first-of-type {
+                margin-right: 8px;
+              }
+            }
+          }
+
+          input,
+          select {
+            min-width: 240px;
+            max-width: 240px;
+          }
+        }
+      }
+    }
+
+    .row {
+      margin-bottom: 8px;
+
+      &#role-select {
+        margin-bottom: 24px;
+      }
+
+      &#projecy-select {
+        margin-top: 24px;
+      }
+
+      .user-password {
+        display: flex;
+        padding: 0;
+
+        input[type='text'] {
+          min-width: 145px;
+          max-width: 145px;
+
+          &:first-of-type {
+            margin-right: 8px;
+          }
+        }
+      }
+
+      .mano-btn {
+        margin-left: 0 !important;
+        width: 298px;
+        height: 32px;
+        line-height: 18px;
+        padding-top: 8px !important;
+      }
+    }
+  }
+}
+
+::ng-deep .vocs-popup.popup-edit {
+  .ui-dialog {
+    p-table {
+      .ui-widget-header {
+        padding: 0 !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@import '../../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  .detail-wrap {
+    table {
+      span {
+        display: inline-flex;
+        align-items: center;
+
+        img {
+          margin: 0 15px 0 5px !important;
+          width: 16px;
+        }
+      }
+
+      &:first-of-type {
+        margin-right: 30px;
+        border-right: 1px solid $border-color;
+      }
+    }
+  }
+
+  .table-wrap {
+    ::ng-deep table {
+      tr {
+        td {
+          &:last-of-type {
+            span {
+              color: $text-color !important;
+              cursor: auto !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,178 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.project.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" (onSort)="onSortOrPage()"
+            (onPage)="onSortOrPage()"
+            [globalFilterFields]="['projectName', 'projectDescription', 'domainName', 'enabled']" [paginator]="true"
+            [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [hidden]="!isAdmin" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.project.title' | translate}}</div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="displayEditor()" [hidden]="!isAdmin">Create
+                            Project</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-project>
+                <tr>
+                    <td style="width: 65px;" [hidden]="!isAdmin">
+                        <p-checkbox name="selectedItem" [value]="project" [(ngModel)]="selecteds" (onChange)="check()">
+                        </p-checkbox>
+                    </td>
+                    <td class="text-left">{{project.projectName}}</td>
+                    <td>{{project.projectDescription}}</td>
+                    <td>{{project.domainName}}</td>
+                    <td>
+                        <img [src]="project.enabled ? '../../../../../content/images/enabled.png' : '../../../../../content/images/disabled.png'"
+                            alt="icon" />
+                    </td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <button class="table-action" (click)="displayEditor(project, true)"
+                            [pTooltip]="'entity.action.edit' | translate" tooltipPosition="bottom"
+                            [disabled]="!isAdmin">
+                            <img src="../../../../../content/images/edit.png" alt="icon" />
+                        </button>
+                        <button class="table-action" (click)="confirmDelete(project.projectId)"
+                            [pTooltip]="'entity.action.delete' | translate" [disabled]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 6 : 4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" appendTo="body" blockScroll="true"
+    (onHide)="closeEditor(); projectForm.reset()" [header]="isEditing ? 'Edit Project' : 'Add Project'"
+    [(visible)]="isDisplayCreateForm" [responsive]="true" showEffect="fade" [modal]="true"
+    [style]="{'max-width': '80vw', width: '1000px'}">
+    <form name="form" role="form" (ngSubmit)="save()" #projectForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Project Name*</td>
+                <td>
+                    <input type="text" (blur)="newProject.projectName=newProject.projectName?.trim()"
+                        pattern="[A-Za-z0-9 _-]+" #projectName="ngModel" name="projectName" minlength="3" maxlength="25"
+                        required="" [(ngModel)]="newProject.projectName" />
+                    <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)">
+                        <div *ngIf="projectName.errors.pattern" class="mess_valid">
+                            Project Name must not be contains special characters.
+                        </div>
+                        <div *ngIf="projectName.errors.minlength" class="mess_valid">
+                            Project Name must be between 3 - 25 characters
+                        </div>
+                        <div *ngIf="projectName.errors?.required && projectName.touched" class="mess_valid">
+                            Project Name is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Project Description</td>
+                <td>
+                    <textarea type="text" name="projectDescription" maxlength="250"
+                        [(ngModel)]="newProject.projectDescription"></textarea>
+                </td>
+            </tr>
+            <tr *ngIf="isEditing">
+                <td>Enabled</td>
+                <td>
+                    <p-inputSwitch [(ngModel)]="newProject.enabled" name="enabled"></p-inputSwitch>
+                </td>
+            </tr>
+        </table>
+
+        <div class="pick-list-wrap row">
+            <div class="col-left col-lg-5">
+                <div class="col-heading">Select User</div>
+                <div class="list-user">
+                    <p-orderList [value]="users" dragdrop="false" [(selection)]="selected">
+                        <ng-template let-user pTemplate="item">
+                            <div class="user">{{user.username}}</div>
+                        </ng-template>
+                    </p-orderList>
+                </div>
+            </div>
+            <div class="col-mid col-lg-2">
+                <div class="move">
+                    <button type="button" class="move-btn" (click)="addUser()">
+                        {{'entity.action.add' | translate}}
+                        <fa-icon [icon]="['fas','angle-right']"></fa-icon>
+                    </button>
+                    <button type="button" class="move-btn" (click)="removeUser()">
+                        <fa-icon [icon]="['fas','angle-left']"></fa-icon>
+                        {{'entity.action.remove' | translate}}
+                    </button>
+                </div>
+                <div class="move-all">
+                    <button type="button" class="move-btn"
+                        (click)="addAll()">{{'entity.action.addAll' | translate}}</button>
+                    <button type="button" class="move-btn"
+                        (click)="removeAll()">{{'entity.action.removeAll' | translate}}</button>
+                </div>
+            </div>
+            <div class="col-right col-lg-5">
+                <div class="col-heading">Selected User</div>
+                <div class="list-user">
+                    <p-orderList [value]="selectedUsers" dragdrop="false" controlsPosition="right"
+                        [(selection)]="removing">
+                        <ng-template let-user pTemplate="item">
+                            <div class="user">{{user.username}}</div>
+                            <div class="role">
+                                <select required [(ngModel)]="user.role" #role="ngModel" [name]="'role' + user.id">
+                                    <option disabled selected value="undefined">--Select Role--</option>
+                                    <option *ngFor="let userRole of roles" [value]="userRole.id">{{userRole.name}}
+                                    </option>
+                                </select>
+
+                                <div *ngIf="role.errors?.required && role.touched" class="mess_valid">
+                                    Role is required
+                                </div>
+
+                            </div>
+                        </ng-template>
+                    </p-orderList>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="projectForm.invalid || isSaving">Save</button>
+            <button class="sub-btn mano-btn" [hidden]="isEditing" type="reset" (click)="resetForm()"
+                jhiTranslate="entity.action.reset">Reset</button>
+            <button class="sub-btn mano-btn" [hidden]="!isEditing" (click)="isDisplayCreateForm = false">Cancel</button>
+        </div>
+    </form>
+</p-dialog>

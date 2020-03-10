@@ -1,0 +1,175 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  .detail-wrap {
+    margin-bottom: 40px;
+
+    table {
+      tr {
+        td {
+          &:last-of-type {
+            font-family: $sub-font;
+          }
+        }
+      }
+    }
+  }
+
+  .table-wrap {
+    ::ng-deep table {
+      tbody {
+        tr {
+          cursor: pointer;
+          transition: 0.3s;
+
+          td {
+            &:last-of-type {
+              .col-action {
+                margin: 0 !important;
+                text-align: left;
+              }
+            }
+          }
+
+          &:hover {
+            background-color: $background-color;
+          }
+        }
+      }
+    }
+
+    .paging {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  .table-wrap {
+    &#vimConnectionForm {
+      max-height: 60vh;
+      overflow: initial;
+
+      .form-group {
+        .row {
+          .form-group {
+            select {
+              width: 100%;
+            }
+
+            margin-bottom: 10px;
+          }
+
+          .ui-widget-header {
+            padding: 0;
+          }
+        }
+      }
+    }
+
+    table {
+      margin: auto;
+
+      tr {
+        td {
+          padding: 8px 10px;
+
+          .key-value {
+            display: flex;
+
+            input[type='text'] {
+              min-width: 116px;
+              max-width: 116px;
+              margin-bottom: 0;
+              margin-right: 8px;
+            }
+          }
+
+          .key-value-wrap {
+            max-height: 200px;
+            overflow: auto;
+
+            .key-value {
+              margin-bottom: 10px;
+            }
+          }
+
+          input,
+          select {
+            min-width: 240px;
+            max-width: 240px;
+          }
+        }
+      }
+    }
+
+    .row {
+      select,
+      input,
+      .mano-btn {
+        min-width: auto;
+        max-width: initial;
+        margin-left: 0;
+      }
+
+      .user-password {
+        display: flex;
+        padding: 0;
+
+        .form-group {
+          width: calc(50% - 4px);
+          margin-bottom: 10px;
+
+          input {
+            width: 100%;
+          }
+
+          &:first-of-type {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+
+    .info-wrap {
+      border: 1px solid $border-color;
+      border-radius: 5px;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+
+      .vim-info-name {
+        text-align: center;
+        font-size: $font-size-xl;
+        font-weight: $bold;
+        margin-bottom: 10px;
+      }
+
+      table {
+        tr {
+          td {
+            text-align: left;
+
+            &:last-of-type {
+              font-weight: $bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .vocs-popup.popup-edit {
+  .ui-dialog {
+    p-table {
+      .ui-widget-header {
+        padding: 0 !important;
+      }
+    }
+  }
+}

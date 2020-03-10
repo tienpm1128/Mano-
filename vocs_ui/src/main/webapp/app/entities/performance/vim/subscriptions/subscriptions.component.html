@@ -1,0 +1,147 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.subscriptions.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data"
+                 (onFilter)="check()"
+                 [first]="first"
+                 [(selection)]="selecteds"
+                 [paginator]="true"
+                 [rows]="10"
+                 [pageLinks]="4"
+                 [rowsPerPageOptions]="[10, 20, 30]"
+                 [globalFilterFields]="[
+                     'filter.computeFilters[0].computeId',
+                     'pmJobDetail.criteria.performanceMetric'.toString().replace(commaRegex, ', '),
+                     'pmJobDetail.criteria.performanceMetricGroup',
+                     'pmJobDetail.criteria.collectionPeriod',
+                     'pmJobDetail.criteria.reportingPeriod',
+                     'pmJobDetail.criteria.reportingBoundary',
+                     'thresholdDetail.criteria.performanceMetric',
+                     'thresholdDetail.criteria.simpleThresholdDetails.thresholdValue',
+                     'thresholdDetail.criteria.simpleThresholdDetails.hysteresis'
+                 ]"
+                 (onPage)="onSortOrPage()" (onSort)="onSortOrPage()" >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()"></p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                            [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                alt="icon"></button></div>
+                    <div [hidden]="selecteds.length !== 0">{{'mano.subscriptions.title' | translate}}</div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col" *ngIf="isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplay = true" *ngIf="isAdmin">Add Subscription</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-vimSubscription>
+                <tr>
+                    <td *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="vimSubscription" [(ngModel)]="selecteds" (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">
+                        {{vimSubscription.filter.computeFilters[0].computeId}}
+                    </td>
+                    <td class="text-left">
+                        <div>
+                            - Performance metrics:
+                            <span *ngFor="let metric of vimSubscription?.pmJobDetail?.criteria?.performanceMetric; let ii = index" style="color: #111; margin: 0;">
+                                {{metric}}<em *ngIf="ii < vimSubscription?.pmJobDetail?.criteria?.performanceMetric?.length - 1">, </em>
+                            </span>
+                        </div>
+                        <div>- Performance metric group: {{vimSubscription?.pmJobDetail?.criteria?.performanceMetricGroup}}</div>
+                        <div>- Collection period: {{vimSubscription?.pmJobDetail?.criteria?.collectionPeriod}}</div>
+                        <div>- Reporting period: {{vimSubscription?.pmJobDetail?.criteria?.reportingPeriod}}</div>
+                        <div>- Reporting boundary: {{vimSubscription?.pmJobDetail?.criteria?.reportingBoundary | date: 'HH:mm:ss dd/MM/yyyy'}}</div>
+
+                        <div>- Performance metrics: {{vimSubscription?.thresholdDetail?.criteria?.performanceMetric}}</div>
+                        <div>- Threshold value: {{vimSubscription?.thresholdDetail?.criteria?.simpleThresholdDetails?.thresholdValue}}</div>
+                        <div>- Hysteresis: {{vimSubscription?.thresholdDetail?.criteria?.simpleThresholdDetails?.hysteresis}}</div>
+                    </td>
+                    <td *ngIf="isAdmin" class="text-right">
+                        <span class="table-action" (click)="confirmDelete(vimSubscription?.id)">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M2.5 6.66699V17.5003C2.5 18.1634 2.76339 18.7993 3.23223 19.2681C3.70107 19.7369 4.33696 20.0003 5 20.0003H15C15.663 20.0003 16.2989 19.7369 16.7678 19.2681C17.2366 18.7993 17.5 18.1634 17.5 17.5003V6.66699H2.5ZM7.5 15.8337H5.83333V10.0003H7.5V15.8337ZM10.8333 15.8337H9.16667V10.0003H10.8333V15.8337ZM14.1667 15.8337H12.5V10.0003H14.1667V15.8337Z"
+                                    fill="#ED2E4F" />
+                                <path
+                                    d="M19.1667 3.33333H14.1667V0.833333C14.1667 0.61232 14.0789 0.400358 13.9226 0.244078C13.7663 0.0877974 13.5543 0 13.3333 0L6.66667 0C6.44565 0 6.23369 0.0877974 6.07741 0.244078C5.92113 0.400358 5.83333 0.61232 5.83333 0.833333V3.33333H0.833333C0.61232 3.33333 0.400358 3.42113 0.244078 3.57741C0.0877974 3.73369 0 3.94565 0 4.16667C0 4.38768 0.0877974 4.59964 0.244078 4.75592C0.400358 4.9122 0.61232 5 0.833333 5H19.1667C19.3877 5 19.5996 4.9122 19.7559 4.75592C19.9122 4.59964 20 4.38768 20 4.16667C20 3.94565 19.9122 3.73369 19.7559 3.57741C19.5996 3.42113 19.3877 3.33333 19.1667 3.33333ZM7.5 1.66667H12.5V3.33333H7.5V1.66667Z"
+                                    fill="#ED2E4F" />
+                            </svg>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 4 : 2">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup"
+          appendTo="body"
+          blockScroll="true"
+          [header]="'Add Pm Subscription'" [(visible)]="isDisplay" [responsive]="true"
+          showEffect="fade" [modal]="true"
+          (onHide)="addForm.reset()"
+          [style]="{'max-width': '80vw', width: '800px'}">
+    <div class="login-vim" *ngIf="hypervisors?.length == 0">
+        <a (click)="toLoginVim()">{{'login.title' | translate}}</a> {{'mano.pmJobs.login' | translate}}
+    </div>
+    <form #addForm="ngForm" name='addForm' (ngSubmit)="save()" role="form" [hidden]="hypervisors?.length === 0">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Select Hypervisor*</td>
+                <td>
+                    <select name="hypervisor" [(ngModel)]="selectHypervisor" #hypervisor="ngModel" required>
+                            <option [value]="null" selected disabled>- Select -</option>
+                            <option *ngFor="let hyper of hypervisors" [ngValue]="hyper">{{hyper?.hypervisorName}} ({{hyper?.hostIP}})</option>
+                    </select>
+                    <div *ngIf="hypervisor.errors?.required && hypervisor.touched" class="mess_valid">
+                        Hypervisor is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Callback URI*</td>
+                <td>
+                    <input [pattern]="uri_regex" (blur)="newVimSubscriptions.callbackUri = newVimSubscriptions.callbackUri?.trim()"
+                           type="text" name="callbackUri" [(ngModel)]="newVimSubscriptions.callbackUri"
+                           #uri="ngModel" (change)="replaceSpace()" [pKeyFilter]="blockSpace" required/>
+                    <div *ngIf="uri.errors?.pattern" class="mess_valid">
+                        Invalid format URI
+                    </div>
+                    <div *ngIf="uri.errors?.required && uri.touched" class="mess_valid">
+                        Callback URI is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="addForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="button" (click)="addForm.reset()">Reset</button>
+        </div>
+    </form>
+</p-dialog>
+

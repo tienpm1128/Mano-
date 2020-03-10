@@ -1,0 +1,99 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.role.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" (onSort)="onSortOrPage()"
+            (onPage)="onSortOrPage()" [globalFilterFields]="['name']" [paginator]="true" [pageLinks]="4"
+            [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [hidden]="!isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.role.title' | translate}}</div>
+                    </th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplayCreate = true" [hidden]="!isAdmin">Create
+                            Role</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-role>
+                <tr>
+                    <td [hidden]="!isAdmin" style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="role" [(ngModel)]="selecteds" (onChange)="check()">
+                        </p-checkbox>
+                    </td>
+                    <td class="text-left">{{role.name}}</td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <span class="table-action" (click)="editForm(role)" pTooltip="Edit"
+                            [pTooltip]="'entity.action.edit' | translate" tooltipPosition="bottom" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/edit.png" alt="icon" />
+                        </span>
+                        <span class="table-action" (click)="confirmDelete(role.id)"
+                            [pTooltip]="'entity.action.delete' | translate" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 3 : 1">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body"
+    [header]="isEditing ? 'Edit Role' : 'Create Role'" (onHide)="addRoleForm.reset(); isEditing = false;"
+    [(visible)]="isDisplayCreate" [responsive]="true" showEffect="fade" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form (ngSubmit)="save()" name='addRoleForm' novalidate #addRoleForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Role Name*</td>
+                <td>
+                    <input type="text" pattern="[A-Za-z0-9 _-]+" (blur)="newRole.name=newRole.name.trim()"
+                        name="roleName" [(ngModel)]="newRole.name" minlength="3" maxlength="20" #roleName="ngModel"
+                        required />
+                    <div *ngIf="roleName.invalid && (roleName.dirty || roleName.touched)">
+                        <div *ngIf="roleName.errors.pattern" class="mess_valid">
+                            Role Name must not be contains special characters.
+                        </div>
+                        <div *ngIf="roleName.errors.minlength" class="mess_valid">
+                            Role Name must be between 3 and 20 characters.
+                        </div>
+                        <div *ngIf="roleName.errors?.required && roleName.touched" class="mess_valid">
+                            Role Name is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div *ngIf="err_mess" class="alert alert-danger ng-star-inserted">{{err_mess}}</div>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="addRoleForm.form.invalid || isSaving">Save</button>
+            <button class="sub-btn mano-btn" (click)="isDisplayCreate = false; isEditing = false">Cancel</button>
+        </div>
+    </form>
+</p-dialog>

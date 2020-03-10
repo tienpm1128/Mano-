@@ -1,0 +1,150 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.nsd.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" (onSort)="onSortOrPage()" (onPage)="onSortOrPage()"
+            [globalFilterFields]="['id', 'nsdId', 'nsdName', 'nsdOnboardingStateType', 'nsdUsageState', 'nsdOperationalStateType']"
+            [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10" [first]="first">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.nsd.title' | translate}}</div>
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" *ngIf="isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="displayUploader = true" [hidden]="!isAdmin">Upload NSD</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nsd>
+                <tr>
+                    <td *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selected" [value]="nsd"
+                            [disabled]="nsd?.nsdOperationalStateType !== 'DISABLED' || nsd?.nsdUsageState !== 'NOT_IN_USE'"
+                            [(ngModel)]="selecteds" (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left"><a [routerLink]="['/nsd', nsd?.id]">{{nsd?.nsdName}}</a></td>
+                    <td>{{nsd?.nsdOnboardingStateType}}</td>
+                    <td>{{nsd?.nsdOperationalStateType}}</td>
+                    <td>{{nsd?.nsdUsageState}}</td>
+                    <td *ngIf="isAdmin" class="text-right">
+                        <span class="table-action" (click)="confirmDownload(nsd)"
+                            [pTooltip]="'entity.action.download' | translate" tooltipPosition="bottom">
+                            <img src="../../../../content/images/download.png" alt="icon" />
+                        </span>
+                        <button class="table-action" [disabled]="nsd?.nsdOnboardingStateType !== 'ONBOARDED'"
+                            (click)="displayEditor(nsd)" [pTooltip]="'entity.action.edit' | translate"
+                            tooltipPosition="bottom" [hidden]="!isAdmin">
+                            <img src="../../../../content/images/edit.png" alt="icon" />
+                        </button>
+                        <button class="table-action"
+                            [disabled]="nsd?.nsdOperationalStateType !== 'DISABLED' || nsd?.nsdUsageState !== 'NOT_IN_USE'"
+                            (click)="confirmDelete(nsd?.id)" [pTooltip]="'entity.action.delete' | translate"
+                            tooltipPosition="bottom" [hidden]="!isAdmin">
+                            <img src="../../../../content/images/delete.png" alt="icon" />
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 6 : 4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-upload vocs-popup" blockScroll="true" appendTo="body" header="Upload a CSAR NSD"
+    [(visible)]="displayUploader" [responsive]="true" showEffect="fade" (onHide)="onHide()" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <p-fileUpload #fileUpload name="csarNsd[]" accept=".csar" draggable="true" showUploadButton="false"
+        showCancelButton="false" [chooseLabel]="'Drag and drop here or browse to choose a file'" maxFileSize="10000"
+        customUpload="true" (onRemove)="uploadFiles = null" (onSelect)="uploader($event)">
+    </p-fileUpload>
+    <div class="error-message-fileupload" *ngIf="hasErrorFileType && isDisplayNotification">
+        <span class="error-message"><strong>{{uploadFileName}}: Invalid format file (CSAR)</strong></span>
+        <span class="ui-message-close close-icon" (click)="removeFile()">
+            <em class="pi pi-times"></em>
+        </span>
+    </div>
+    <div class="successful-message-fileupload" *ngIf="!hasErrorFileType && isDisplayNotification">
+        <div class="message-row">
+            <div>{{uploadFileName}}</div>
+            <div>{{uploadFiles.size}} B</div>
+            <div class="close-btn" (click)="removeFile()">
+                <em class="pi pi-times"></em>
+            </div>
+        </div>
+        <div *ngIf="(uploadFiles.size) > 10000000" class="mess_valid">
+            The maximum file size allowed is 10MB
+        </div>
+    </div>
+    <div class="popup-btns">
+        <button class="mano-btn" (click)="startUpload()"
+            [disabled]="!uploadFiles || (uploadFiles.size) > 10000000">Save</button>
+        <button class="sub-btn mano-btn" (click)="displayUploader = false">Cancel</button>
+    </div>
+</p-dialog>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" header="Edit Network Service Descriptor"
+    (onHide)="hideDialog()" [(visible)]="isDisplayEditor" [responsive]="true" showEffect="fade" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <table>
+        <caption></caption>
+        <tr style="display: none;">
+            <th scope="col"></th>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td>{{editingNSD?.id}}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{editingNSD?.nsdName}}</td>
+        </tr>
+        <tr>
+            <td>Version</td>
+            <td>{{editingNSD?.nsdVersion}}</td>
+        </tr>
+        <tr>
+            <td>Designer</td>
+            <td>{{editingNSD?.nsdDesigner}}</td>
+        </tr>
+        <tr>
+            <td>Operational State</td>
+            <td>
+                <p-radioButton class="radio-btn" name="nsdOperationalStateType" label="ENABLED" value="ENABLED"
+                    [(ngModel)]="editingNSD.nsdOperationalStateType"></p-radioButton>
+                <p-radioButton class="radio-btn" name="nsdOperationalStateType" label="DISABLED" value="DISABLED"
+                    [(ngModel)]="editingNSD.nsdOperationalStateType"></p-radioButton>
+            </td>
+        </tr>
+    </table>
+    <div class="popup-btns">
+        <button class="mano-btn" (click)="updateNsd()">Save</button>
+        <button type="reset" class="sub-btn mano-btn" (click)="isDisplayEditor = false"
+            jhiTranslate="entity.action.cancel"></button>
+    </div>
+</p-dialog>

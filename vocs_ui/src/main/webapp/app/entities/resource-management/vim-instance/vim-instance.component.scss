@@ -1,0 +1,95 @@
+@import '../../../../content/scss/vars';
+
+::ng-deep .popup-edit {
+  form {
+    table {
+      tr {
+        td {
+          padding: 5px 10px;
+          white-space: nowrap;
+
+          .input-wrap {
+            .col-input {
+              display: flex;
+              width: 100%;
+
+              .mano-btn {
+                margin-left: 8px !important;
+                width: 32px;
+
+                &.add-btn {
+                  margin-left: 0;
+                }
+              }
+            }
+
+            .col-result {
+              background-color: $background-color;
+              border-radius: 4px;
+              padding: 4px;
+              margin-top: 8px;
+              max-height: 144px;
+              overflow: auto;
+
+              ::ng-deep .ui-chips {
+                .ui-inputtext {
+                  padding: 0;
+                  display: flex;
+                  flex-wrap: wrap;
+
+                  .ui-chips-token {
+                    background: $slave-color;
+                    border: 1px solid $border-color;
+                    border-radius: 4px;
+                    margin: 4px;
+
+                    .ui-chips-token-icon {
+                      &::before {
+                        content: '';
+                        background-image: url(../../../../content/images/delete-chip.png);
+                        background-position: center;
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        width: 14px;
+                        height: 14px;
+                        display: block;
+                      }
+                    }
+                  }
+
+                  .ui-chips-input-token {
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
+
+          input,
+          select {
+            width: 100%;
+            min-width: auto;
+          }
+
+          &.text-top {
+            padding-top: 5px;
+            vertical-align: top;
+          }
+
+          &:nth-of-type(2) {
+            padding: 4px 30px 4px 12px !important;
+          }
+
+          &:last-of-type {
+            padding-right: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.mess_valid_01 {
+  max-width: 100%;
+  white-space: normal;
+}

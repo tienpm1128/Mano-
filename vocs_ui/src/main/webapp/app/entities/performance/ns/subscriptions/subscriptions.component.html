@@ -1,0 +1,184 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.subscriptions.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" [paginator]="true" [rows]="10" [pageLinks]="4"
+            (onSort)="onSortOrPage()" (onPage)="onSortOrPage()" [rowsPerPageOptions]="[10, 20, 30]"
+            [globalFilterFields]="[
+                     'filter.nsInstanceSubscriptionFilter.nsInstanceIds'.toString().replace(commaRegex, ', '),
+                     'filter.notificationTypes',
+                     'pmJobDetail.criteria.performanceMetric'.toString().replace(commaRegex, ', '),
+                     'pmJobDetail.criteria.performanceMetricGroup',
+                     'pmJobDetail.criteria.collectionPeriod',
+                     'pmJobDetail.criteria.reportingPeriod',
+                     'pmJobDetail.criteria.reportingBoundary',
+                     'thresholdDetail.criteria.performanceMetric',
+                     'thresholdDetail.criteria.simpleThresholdDetails.thresholdValue',
+                     'thresholdDetail.criteria.simpleThresholdDetails.hysteresis'
+                 ]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.subscriptions.title' | translate}}</div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col" style="width: 29%;"></th>
+                    <th scope="col" *ngIf="isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplay = true" *ngIf="isAdmin">Add
+                            Subscription</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nsSubscription>
+                <tr *ngFor="let notificationType of nsSubscription?.filter?.notificationTypes; let i = index">
+                    <td *ngIf="isAdmin && i === 0" [attr.rowspan]="nsSubscription?.filter?.notificationTypes?.length"
+                        style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="nsSubscription" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td *ngIf="i === 0" [attr.rowspan]="nsSubscription?.filter?.notificationTypes?.length">
+                        <a *ngFor="let nsInstance of nsSubscription?.filter?.nsInstanceSubscriptionFilter?.nsInstanceIds; let i = index"
+                            [routerLink]="['/nslcm', nsInstance]">
+                            {{nsInstance}}<em
+                                *ngIf="i < nsSubscription?.filter?.nsInstanceSubscriptionFilter?.nsInstanceIds?.length - 1">,&nbsp;</em>
+                        </a>
+                    </td>
+                    <td>
+                        <a *ngIf="notificationType === 'PerformanceInformationAvailableNotification'"
+                            [routerLink]="['./', nsSubscription.id, 'pmjob']">{{notificationType}}</a>
+                        <a *ngIf="notificationType === 'ThresholdCrossedNotification'"
+                            [routerLink]="['./', nsSubscription.id, 'threshold']">{{notificationType}}</a>
+                    </td>
+                    <td class="text-left">
+                        <ng-container *ngIf="notificationType === 'PerformanceInformationAvailableNotification'">
+                            <div>
+                                - Performance metrics:
+                                <span
+                                    *ngFor="let metric of nsSubscription?.pmJobDetail?.criteria?.performanceMetric; let ii = index"
+                                    style="color: #111; margin: 0;">
+                                    {{metric}}<em
+                                        *ngIf="ii < nsSubscription?.pmJobDetail?.criteria?.performanceMetric?.length - 1">,&nbsp;</em>
+                                </span>
+                            </div>
+                            <div>- Performance metric group:
+                                {{nsSubscription?.pmJobDetail?.criteria?.performanceMetricGroup}}</div>
+                            <div>- Collection period: {{nsSubscription?.pmJobDetail?.criteria?.collectionPeriod}}</div>
+                            <div>- Reporting period: {{nsSubscription?.pmJobDetail?.criteria?.reportingPeriod}}</div>
+                            <div>- Reporting boundary:
+                                {{nsSubscription?.pmJobDetail?.criteria?.reportingBoundary | date: 'HH:mm:ss dd/MM/yyyy'}}
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="notificationType === 'ThresholdCrossedNotification'">
+                            <div>- Performance metrics: {{nsSubscription?.thresholdDetail?.criteria?.performanceMetric}}
+                            </div>
+                            <div>- Threshold value:
+                                {{nsSubscription?.thresholdDetail?.criteria?.simpleThresholdDetails?.thresholdValue}}
+                            </div>
+                            <div>- Hysteresis:
+                                {{nsSubscription?.thresholdDetail?.criteria?.simpleThresholdDetails?.hysteresis}}</div>
+                        </ng-container>
+                    </td>
+                    <td *ngIf="isAdmin && i === 0" [attr.rowspan]="nsSubscription?.filter?.notificationTypes?.length"
+                        style="width: 10%;">
+                        <span class="table-action" (click)="confirmDelete(nsSubscription?.id)">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+                <tr *ngIf="!nsSubscription?.filter?.notificationTypes">
+                    <td *ngIf="isAdmin" [attr.rowspan]="nsSubscription?.filter?.notificationTypes?.length"
+                        style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="nsSubscription" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td>
+                        <a *ngFor="let nsInstance of nsSubscription?.filter?.nsInstanceSubscriptionFilter?.nsInstanceIds; let i = index"
+                            [routerLink]="['/nslcm', nsInstance]">
+                            {{nsInstance}}<em
+                                *ngIf="i < nsSubscription?.filter?.nsInstanceSubscriptionFilter?.nsInstanceIds?.length - 1">,&nbsp;</em>
+                        </a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 5 : 3">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" [header]="'Add Pm Subscription'"
+    [(visible)]="isDisplay" [responsive]="true" showEffect="fade" (onShow)="resetForm(); addForm.reset()" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='addForm' (ngSubmit)="save()" #addForm="ngForm" role="form">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Select Ns Instance*</td>
+                <td>
+                    <p-listbox [listStyle]="{'max-height':'100px','padding':'2px','border-radius':'5px'}"
+                        [options]="listNsInstances" name="selectedNsInstances" [(ngModel)]="selectNsInstance"
+                        multiple="true" optionLabel="nsInstanceName" required>
+                    </p-listbox>
+                </td>
+            </tr>
+            <tr>
+                <td>Notification Type*</td>
+                <td>
+                    <select [(ngModel)]="newNsSubscriptions.filter.notificationTypes[0]" name="notificationTypes"
+                        #notificationTypes="ngModel" required>
+                        <option disabled selected [value]="null">- Select -</option>
+                        <option value="ThresholdCrossedNotification">ThresholdCrossedNotification</option>
+                        <option value="PerformanceInformationAvailableNotification">
+                            PerformanceInformationAvailableNotification</option>
+                    </select>
+                    <div *ngIf="notificationTypes.errors?.required && notificationTypes.touched" class="mess_valid">
+                        Notification Type is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Callback URI*</td>
+                <td>
+                    <input [pattern]="uri_regex"
+                        (blur)="newNsSubscriptions.callbackUri = newNsSubscriptions.callbackUri?.trim()" type="text"
+                        name="callbackUri" [(ngModel)]="newNsSubscriptions.callbackUri" #uri="ngModel"
+                        (change)="replaceSpace()" [pKeyFilter]="blockSpace" required />
+                    <div *ngIf="uri.errors?.pattern" class="mess_valid">
+                        Invalid format URI
+                    </div>
+                    <div *ngIf="uri.errors?.required && uri.touched" class="mess_valid">
+                        Callback URI is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="addForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="button" (click)="addForm.reset()">Reset</button>
+        </div>
+    </form>
+</p-dialog>

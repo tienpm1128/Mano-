@@ -1,0 +1,32 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.nsInstanceNotifications.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="nsInstanceNotifications" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [globalFilterFields]="['id', 'notificationType', 'subscriptionId', 'nsInstanceId', 'timeStamp']" [paginator]="true" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col">{{'mano.nsInstanceNotifications.title' | translate}}</th>
+                    <th scope="col"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nsInstanceNotification>
+                <tr>
+                    <td>{{nsInstanceNotification.notificationType}}</td>
+                    <td>{{nsInstanceNotification.timeStamp | date: 'HH:mm:ss'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="2">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

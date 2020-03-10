@@ -1,0 +1,185 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.thresholds.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" (onSort)="onSortOrPage()" (onPage)="onSortOrPage()"
+            [globalFilterFields]="['id', 'objectInstanceId'.toString().replace(commaRegex, ', ')]" [paginator]="true"
+            [rows]="10" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [first]="first">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.thresholds.title' | translate}}</div>
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplay = true" [hidden]="!isAdmin">Add Threshold</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-threshold>
+                <tr>
+                    <td style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selectedItem" [value]="threshold" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">
+                        <a [routerLink]="['/nspm/thresholds', threshold.id]">
+                            {{threshold.id}}
+                        </a>
+                    </td>
+                    <td>
+                        <a [routerLink]="['/nslcm', threshold.objectInstanceId]">
+                            {{threshold.objectInstanceId}}
+                        </a>
+                    </td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <span class="table-action" (click)="confirmDelete(threshold.id)" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 4 : 2">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" header="Add Threshold"
+    [(visible)]="isDisplay" [responsive]="true" showEffect="fade" (onHide)="addForm.reset()" [modal]="true"
+    [style]="{'max-width': '80vw', 'width': '800px'}">
+    <form name='addForm' (ngSubmit)="save()" #addForm="ngForm" role="form">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Select Ns Instance*</td>
+                <td>
+                    <select [(ngModel)]="newThresholds.objectInstanceId" name="objectInstanceId"
+                        #objectInstanceId="ngModel" required>
+                        <option disabled selected value="null">- Select -</option>
+                        <option *ngFor="let nsInstance of nsInstances" [ngValue]="nsInstance.id">
+                            {{nsInstance.nsInstanceName}}</option>
+                    </select>
+                    <div *ngIf="objectInstanceId.errors?.required && objectInstanceId.touched" class="mess_valid">
+                        Ns Instance is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="criteria_box">
+            <h1 class="title">Threshold Criteria</h1>
+            <table>
+                <caption></caption>
+                <tr style="display: none;">
+                    <th scope="col"></th>
+                </tr>
+                <tr>
+                    <td>Performance Metric*</td>
+                    <td>
+                        <select class="input_width" [(ngModel)]="newThresholds.criteria.performanceMetric"
+                            name="performanceMetric" #performanceMetric="ngModel" required>
+                            <option disabled selected value="null">- Select -</option>
+                            <option *ngFor="let performanceMetric of performanceMetrics; let i = index"
+                                [ngValue]="performanceMetrics[i]">{{performanceMetrics[i]}}</option>
+                        </select>
+                        <div *ngIf="performanceMetric.errors?.required && performanceMetric.touched" class="mess_valid">
+                            Performance Metric is required
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Threshold Type*</td>
+                    <td>
+                        <select class="input_width" [(ngModel)]="newThresholds.criteria.thresholdType"
+                            #thresholdType="ngModel" name="thresholdType" required>
+                            <option disabled selected value="null">- Select -</option>
+                            <option value="SIMPLE">SIMPLE</option>
+                        </select>
+                        <div *ngIf="thresholdType.errors?.required && thresholdType.touched" class="mess_valid">
+                            Threshold Type is required
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="criteria_box_1">
+                <h1 class="title">Simple Threshold Details</h1>
+                <table>
+                    <caption></caption>
+                    <tr style="display: none;">
+                        <th scope="col"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label>Threshold Value*</label>
+                                <div class="input-wrap">
+                                    <input pattern="[0-9]+(\.[0-9][0-9]?)?" [pKeyFilter]="blockSpace"
+                                        class="input_width_1" type="text"
+                                        [(ngModel)]="newThresholds.criteria.simpleThresholdDetails.thresholdValue"
+                                        [class.invalid]="thresholdValue.value && (thresholdValue.value <= 0 || thresholdValue.value > 999.99)"
+                                        #thresholdValue="ngModel" name="thresholdValue" required>
+                                    <div *ngIf="thresholdValue.errors?.required && thresholdValue.touched"
+                                        class="mess_valid">
+                                        Threshold Value is required
+                                    </div>
+                                    <div *ngIf="(thresholdValue.errors?.pattern || thresholdValue.value <= 0 || thresholdValue.value > 999.99) && !thresholdValue.errors?.required"
+                                        class="mess_valid">
+                                        Threshold Value must be valid from 0.01 - 999.99
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label>Hysteresis*</label>
+                                <div class="input-wrap">
+                                    <input pattern="[0-9]+(\.[0-9][0-9]?)?" [pKeyFilter]="blockSpace"
+                                        class="input_width_1" type="text"
+                                        [(ngModel)]="newThresholds.criteria.simpleThresholdDetails.hysteresis"
+                                        [class.invalid]="hysteresis.value && (hysteresis.value <= 0 || hysteresis.value > 999.99)"
+                                        #hysteresis="ngModel" name="hysteresis" required>
+                                    <div *ngIf="hysteresis.errors?.required && hysteresis.touched" class="mess_valid">
+                                        Hysteresis is required
+                                    </div>
+                                    <div *ngIf="(hysteresis.errors?.pattern || hysteresis.value <= 0 || hysteresis.value > 999.99) && !hysteresis.errors?.required"
+                                        class="mess_valid">
+                                        Hysteresis value must be valid from 0.01 - 999.99
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="popup-btns">
+            <button class="mano-btn"
+                [disabled]="addForm.form.invalid || isSaving || (thresholdValue.value <= 0 || thresholdValue.value > 999.99) || (hysteresis.value <= 0 || hysteresis.value > 999.99)"
+                type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="reset">Reset</button>
+        </div>
+    </form>
+</p-dialog>

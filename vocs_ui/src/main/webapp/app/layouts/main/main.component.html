@@ -1,0 +1,8 @@
+<jhi-sidebar *ngIf="!isLoginPage"></jhi-sidebar>
+<router-outlet name="navbar" *ngIf="!isLoginPage"></router-outlet>
+<div id="site-container" [class.show-sidebar]="screenWidth > 1024" [class.logging-in]="isLoginPage" #siteContainer>
+    <router-outlet></router-outlet>
+    <router-outlet name="popup"></router-outlet>
+    <div #overlay class="overlay" (click)="hideSidebar()"></div>
+</div>
+<jhi-footer *ngIf="!isLoginPage"></jhi-footer>

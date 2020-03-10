@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.viettel.nfv.vdashboardx</groupId>
+    <artifactId>main</artifactId>
+    <name>main</name>
+
+    <parent>
+        <groupId>com.viettel.nfv</groupId>
+        <artifactId>vdashboardx</artifactId>
+        <version>1.6</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>shared</artifactId>
+            <version>${version.root}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>value-objects</artifactId>
+            <version>${version.root}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>configuration</artifactId>
+            <version>${version.root}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>communication</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-authentication</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-errormanagement</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-networkservice</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-notifications</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-othermanagement</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-resourcemanagement</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.viettel.nfv.vdashboardx</groupId>
+            <artifactId>fm-performancemanagement</artifactId>
+            <version>${version.root}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>vocs-service-0.0.1-SNAPSHOT</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.viettel.nfv.vdashboardx.WebfluxFunctionalApp</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,15 @@
+.table-wrap {
+  ::ng-deep table {
+    tr {
+      td {
+        .table-action {
+          cursor: pointer;
+        }
+
+        img {
+          width: 16px;
+        }
+      }
+    }
+  }
+}

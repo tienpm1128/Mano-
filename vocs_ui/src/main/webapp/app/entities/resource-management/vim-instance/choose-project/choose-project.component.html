@@ -1,0 +1,20 @@
+<div class="main-content">
+    <div class="form-wrap">
+        <div class="page-heading" jhiTranslate="mano.vimInstances.chooseProject"></div>
+        <form class="login-form" role="form" #chooseProject="ngForm" (ngSubmit)="save()">
+            <div class="form-group">
+                <label>Projects*</label>
+                <div>
+                    <select [(ngModel)]="selectedProject" name="project" #project="ngModel" required>
+                        <option value="null" disabled>- Select -</option>
+                        <option *ngFor="let project of projects" [ngValue]="project">{{project?.projectName}}</option>
+                    </select>
+                    <div *ngIf="project.errors?.required && project.touched" class="mess_valid">
+                        Projects is required
+                    </div>
+                </div>
+            </div>
+            <button [disabled]="chooseProject.form.invalid" type="submit" class="mano-btn" jhiTranslate="entity.action.save">Save</button>
+        </form>
+    </div>
+</div>

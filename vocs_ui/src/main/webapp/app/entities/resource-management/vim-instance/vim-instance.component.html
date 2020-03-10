@@ -1,0 +1,237 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.vimInstances.header' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt (onSort)="onSortOrPage()" (onFilter)="check()" [first]="first" (onPage)="onSortOrPage()"
+            [globalFilterFields]="['id', 'name', 'domain', 'location.name', 'active']" [value]="data" [paginator]="true"
+            [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.vimInstances.header' | translate}}</div>  
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" *ngIf="isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplayEditor = true" jhiTranslate="mano.vimInstances.addVim"></button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-vimInstance>
+                <tr>
+                    <td style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selectedItem" [value]="vimInstance" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">
+                        <a [routerLink]="checkLoggedVim(vimInstance.id)"
+                            [queryParams]="{ vim : vimInstance.name }">{{vimInstance.name}}</a>
+                    </td>
+                    <td>{{vimInstance.domain}}</td>
+                    <td>{{vimInstance?.location?.name}}</td>
+                    <td>{{vimInstance.active ? 'Active' : 'Inactive'}}</td>
+                    <td *ngIf="isAdmin" class="text-right">
+                        <button class="table-action" (click)="confirmDelete(vimInstance.id)">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M2.5 6.66699V17.5003C2.5 18.1634 2.76339 18.7993 3.23223 19.2681C3.70107 19.7369 4.33696 20.0003 5 20.0003H15C15.663 20.0003 16.2989 19.7369 16.7678 19.2681C17.2366 18.7993 17.5 18.1634 17.5 17.5003V6.66699H2.5ZM7.5 15.8337H5.83333V10.0003H7.5V15.8337ZM10.8333 15.8337H9.16667V10.0003H10.8333V15.8337ZM14.1667 15.8337H12.5V10.0003H14.1667V15.8337Z"
+                                    fill="#ED2E4F" />
+                                <path
+                                    d="M19.1667 3.33333H14.1667V0.833333C14.1667 0.61232 14.0789 0.400358 13.9226 0.244078C13.7663 0.0877974 13.5543 0 13.3333 0L6.66667 0C6.44565 0 6.23369 0.0877974 6.07741 0.244078C5.92113 0.400358 5.83333 0.61232 5.83333 0.833333V3.33333H0.833333C0.61232 3.33333 0.400358 3.42113 0.244078 3.57741C0.0877974 3.73369 0 3.94565 0 4.16667C0 4.38768 0.0877974 4.59964 0.244078 4.75592C0.400358 4.9122 0.61232 5 0.833333 5H19.1667C19.3877 5 19.5996 4.9122 19.7559 4.75592C19.9122 4.59964 20 4.38768 20 4.16667C20 3.94565 19.9122 3.73369 19.7559 3.57741C19.5996 3.42113 19.3877 3.33333 19.1667 3.33333ZM7.5 1.66667H12.5V3.33333H7.5V1.66667Z"
+                                    fill="#ED2E4F" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 6 : 4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" (onShow)="newVimInstance.type = null"
+    (onHide)="vimInstanceForm.reset()" header="Add Vim Instance" [(visible)]="isDisplayEditor" [responsive]="true"
+    showEffect="fade" [modal]="true" [style]="{'max-width': '80vw', 'width': '800px'}">
+    <form name='vimInstanceForm' novalidate (ngSubmit)="save()" #vimInstanceForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Auth URL*</td>
+                <td>
+                    <input type="text" (blur)="newVimInstance.authUrl=newVimInstance.authUrl?.trim()" name="authUrl"
+                        [(ngModel)]="newVimInstance.authUrl" #authUrl="ngModel" required />
+                    <div *ngIf="authUrl.errors?.required && authUrl.touched" class="mess_valid mess_valid_01">
+                        Auth URL is required
+                    </div>
+                </td>
+                <td>HA IP</td>
+                <td>
+                    <input type="text" (blur)="newVimInstance.controllerHaIp=newVimInstance.controllerHaIp?.trim()"
+                        name="controllerHaIp" [(ngModel)]="newVimInstance.controllerHaIp" #controllerHaIp="ngModel"
+                        [pattern]="ipV46" />
+                    <div *ngIf="controllerHaIp.errors?.pattern" class="mess_valid mess_valid_01">
+                        Invalid format IP v4 or v6
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Name*</td>
+                <td>
+                    <input type="text" (blur)="newVimInstance.name=newVimInstance.name?.trim()"
+                        pattern="[A-Za-z0-9 _-]+" minlength="3" maxlength="25" #nameVim="ngModel" name="nameVim"
+                        [(ngModel)]="newVimInstance.name" required />
+                    <div *ngIf="nameVim.errors?.pattern" class="mess_valid mess_valid_01">
+                        Name Vim must not be contains special characters.
+                    </div>
+                    <div *ngIf="nameVim.errors?.minlength" class="mess_valid mess_valid_01">
+                        Name must be between 3 - 25 characters
+                    </div>
+                    <div *ngIf="nameVim.errors?.required && nameVim.touched" class="mess_valid mess_valid_01">
+                        Name is required
+                    </div>
+                </td>
+                <td>Domain*</td>
+                <td>
+                    <input type="text" (blur)="newVimInstance.domain=newVimInstance.domain?.trim()" name="domain"
+                        [(ngModel)]="newVimInstance.domain" #domain="ngModel" required />
+                    <div *ngIf="domain.errors?.required && domain.touched" class="mess_valid mess_valid_01">
+                        Domain is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Management Subnet*</td>
+                <td>
+                    <input type="text" #managementSubnet="ngModel" [pattern]="subnet"
+                        (blur)="newVimInstance.managementSubnet=newVimInstance.managementSubnet?.trim()"
+                        name="managementSubnet" [(ngModel)]="newVimInstance.managementSubnet" required />
+                    <div *ngIf="managementSubnet.errors?.pattern" class="mess_valid mess_valid_01">
+                        Invalid format subnet
+                    </div>
+                    <div *ngIf="managementSubnet.errors?.required && managementSubnet.touched"
+                        class="mess_valid mess_valid_01">
+                        Management Subnet is required
+                    </div>
+                </td>
+                <td>Type*</td>
+                <td>
+                    <select [(ngModel)]="newVimInstance.type" name="type" #type="ngModel" required>
+                        <option value="null" disabled>- Select -</option>
+                        <option value="OPENSTACK">OPENSTACK</option>
+                        <option value="OPENVIM">OPENVIM</option>
+                        <option value="KUBERNETES">KUBERNETES</option>
+                    </select>
+                    <div *ngIf="type.errors?.required && type.touched" class="mess_valid mess_valid_01">
+                        Type is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Location Name</td>
+                <td colspan="3">
+                    <input type="text" (blur)="location.name=location.name.trim()" name="locationName" maxlength="250"
+                        [(ngModel)]="location.name" />
+                </td>
+            </tr>
+            <tr>
+                <td>Latitude</td>
+                <td>
+                    <input pattern="^-?[0-9]+$" type="text" [class.invalid]="checkNumber(-90, 90, latitude.value)"
+                        #latitude="ngModel" name="latitude" [(ngModel)]="location.latitude" />
+                    <div *ngIf="checkNumber(-90,90,latitude.value) && !latitude.errors?.pattern && latitude.touched"
+                        class="mess_valid mess_valid_01">
+                        Values of latitude range from -90 and +90
+                    </div>
+                    <div *ngIf="latitude.errors?.pattern && latitude.touched" class="mess_valid">
+                        Invalid format latitude
+                    </div>
+                </td>
+                <td>Longitude</td>
+                <td>
+                    <input pattern="^-?[0-9]+$" type="text" [class.invalid]="checkNumber(-180, 180, longtide.value)"
+                        #longtide="ngModel" name="longtide" [(ngModel)]="location.longitude" />
+                    <div *ngIf="checkNumber(-180,180,longtide.value) && !longtide.errors?.pattern && longtide.touched"
+                        class="mess_valid mess_valid_01">
+                        Values of longitude range from -180 and +180
+                    </div>
+                    <div *ngIf="longtide.errors?.pattern && longtide.touched" class="mess_valid">
+                        Invalid format longitude
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-top">Controller IP</td>
+                <td colspan="3">
+                    <div class="input-wrap">
+                        <div class="col-input">
+                            <input type="text" [pKeyFilter]="blockSpace" name="controllerPhysicalIps"
+                                #controllerPhysicalIps="ngModel" [ngModel]="" [pattern]="ipV46" #newIp />
+                            <button class="add-btn mano-btn" type="button" (click)="addIp(newIp.value)">
+                                <img src="../../../../content/images/simple-add.png" alt="icon" />
+                            </button>
+                        </div>
+                        <div class="col-result" *ngIf="controllerIps?.length > 0">
+                            <p-chips name="controllerIps" [(ngModel)]="controllerIps"></p-chips>
+                        </div>
+                    </div>
+                    <div *ngIf="controllerPhysicalIps.errors?.pattern" class="mess_valid mess_valid_01">
+                        Invalid format IP v4 or v6
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Username*</td>
+                <td>
+                    <input type="text" [pKeyFilter]="blockSpace" (change)="replaceSpaceUsername()"
+                        pattern="[A-Za-z0-9 _-]+" #username="ngModel" name="username" [(ngModel)]="verifyVim.username"
+                        required />
+                    <div *ngIf="username.errors?.pattern" class="mess_valid mess_valid_01">
+                        Username must not be contains special characters.
+                    </div>
+                    <div *ngIf="username.errors?.required && username.touched" class="mess_valid mess_valid_01">
+                        Username is required
+                    </div>
+                </td>
+                <td>Password*</td>
+                <td>
+                    <input type="password" [pKeyFilter]="blockSpace" (change)="replaceSpacePassword()" name="password"
+                        [(ngModel)]="verifyVim.password" #password="ngModel" required />
+                    <div *ngIf="password.errors?.required && password.touched" class="mess_valid mess_valid_01">
+                        Password is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn"
+                [disabled]="vimInstanceForm.form.invalid || isSaving || checkNumber(-180,180,longtide.value) || checkNumber(-90,90,latitude.value)"
+                type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="button" (click)="vimInstanceForm.reset()">Reset</button>
+        </div>
+    </form>
+</p-dialog>

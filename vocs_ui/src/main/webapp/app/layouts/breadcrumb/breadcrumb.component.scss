@@ -1,0 +1,43 @@
+@import '../../../content/scss/vars.scss';
+
+.breadcrumb-wrap {
+  padding: 0 0 10px 0;
+
+  .breadcrumb-items {
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+
+    .breadcrumb-item {
+      list-style: none;
+      display: inline-block;
+      white-space: nowrap;
+
+      a {
+        transition: 0.3s;
+
+        &:hover {
+          color: $base-color;
+        }
+
+        &.active {
+          color: $sub-text-color;
+          cursor: text;
+        }
+      }
+
+      &:last-of-type {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+@media only screen and(max-width: 1160px) {
+  .breadcrumb-wrap {
+    .breadcrumb-items {
+      padding: 0 15px;
+    }
+  }
+}

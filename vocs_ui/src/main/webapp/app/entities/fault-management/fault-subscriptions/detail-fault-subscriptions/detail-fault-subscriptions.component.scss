@@ -1,0 +1,54 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  .detail-wrap {
+    margin-bottom: 40px;
+
+    table {
+      tr {
+        td {
+          &:last-of-type {
+            font-family: $sub-font;
+          }
+        }
+      }
+    }
+  }
+
+  .table-wrap {
+    ::ng-deep table {
+      tbody {
+        tr {
+          cursor: pointer;
+          transition: 0.3s;
+
+          td {
+            &:last-of-type {
+              .col-action {
+                margin: 0 !important;
+                text-align: left;
+              }
+
+              font-weight: $bold;
+            }
+          }
+
+          &:hover {
+            background-color: $background-color;
+          }
+        }
+      }
+    }
+
+    .paging {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+
+  .mano-btn {
+    margin: 0;
+  }
+}

@@ -1,0 +1,77 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="detail-wrap">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>{{nsdDetail?.nsdName}}</td>
+                </tr>
+                <tr>
+                    <td>Designer</td>
+                    <td>{{nsdDetail?.nsdDesigner}}</td>
+                </tr>
+                <tr>
+                    <td>Version</td>
+                    <td>{{nsdDetail?.nsdVersion}}</td>
+                </tr>
+                <tr>
+                    <td>Onboarding State</td>
+                    <td>{{nsdDetail?.nsdOnboardingStateType}}</td>
+                </tr>
+                <tr>
+                    <td>Operating Status</td>
+                    <td>
+                        {{nsdDetail?.nsdOperationalStateType}}
+                        <img *ngIf="nsdDetail?.nsdOperationalStateType === 'ENABLED'" src="../../../../../content/images/enabled.png" alt="status ico"/>
+                        <img *ngIf="nsdDetail?.nsdOperationalStateType === 'DISABLED'" src="../../../../../content/images/disabled.png" alt="status ico"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Usage State</td>
+                    <td>{{nsdDetail?.nsdUsageState}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-wrap">
+        <div class="page-heading" jhiTranslate="mano.vnf.title">VNF Descriptors</div>
+        <div class="search-btn-wrap">
+            <div class="search-box">
+                <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+            </div>
+        </div>
+        <p-table #dt [value]="vnfds" [globalFilterFields]="['vnfdId', 'vnfProvider', 'vnfProductName', 'vnfSoftwareVersion', 'vnfdVersion']" [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col">VNF Descriptors</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-vnfd>
+                <tr [pSelectableRow]="rowData">
+                    <td>{{vnfd.vnfProvider}}</td>
+                    <td><a class="break-letter" [routerLink]="['vnfd', vnfd.vnfdId]">
+                        {{vnfd.vnfProductName}}
+                    </a></td>
+                    <td>{{vnfd.vnfSoftwareVersion}}</td>
+                    <td>{{vnfd.vnfdVersion}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

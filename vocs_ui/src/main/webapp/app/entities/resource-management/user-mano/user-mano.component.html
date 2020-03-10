@@ -1,0 +1,220 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.userMano.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+    <div class="btns">
+        <button class="mano-btn" (click)="isDisplayCreate = true" [hidden]="!isAdmin">Create</button>
+        <button class="sub-btn mano-btn" [disabled]="selecteds.length===0" [hidden]="!isAdmin"
+            (click)="confirmDelete()">Delete
+        </button>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" [globalFilterFields]="['username', 'roleType']"
+             (onFilter)="check()"
+            [paginator]="true"
+            [(selection)]="selecteds"
+            [rows]="10"
+             [pageLinks]="4"
+             [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()"></p-checkbox>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'username'">User Name
+                        <p-sortIcon [field]="'username'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'roleType'">Role
+                        <p-sortIcon [field]="'roleType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 10%;">Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-userMano>
+                <tr>
+                    <td style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="userMano" [(ngModel)]="selecteds" (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td>{{userMano.username}}</td>
+                    <td>
+                        <div *ngFor="let role of userMano?.data">
+                            {{role.roleType}}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="table-action" (click)="editForm(userMano)" [hidden]="!isAdmin">
+                            <img src="../../../../content/images/edit.png" alt="icon"/>
+                        </span>
+                        <span class="table-action" (click)="confirmDelete(userMano.id)" [hidden]="!isAdmin">
+                            <img src="../../../../content/images/delete.png" alt="icon"/>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="3">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorright" let-state>
+                Show
+                <ng-container *ngIf="state.rows > state.totalRecords && state.totalRecords > 0">{{state.first + 1}} - </ng-container>
+                <ng-container *ngIf="state.rows < state.totalRecords && state.totalRecords > 0">{{state.totalRecords > 0 ? state.first + 1 : state.first}} - </ng-container>
+                <ng-container *ngIf="state.first + 1 <= state.totalRecords && state.totalRecords > 0">{{(state.first + 1 + state.rows) > state.totalRecords ? state.totalRecords : state.first + state.rows}}</ng-container>
+                <ng-container *ngIf="state.totalRecords > 0">of </ng-container>
+                {{state.totalRecords}} results
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup"
+          blockScroll="true"
+          appendTo="body"
+          header="Update User Mano" [(visible)]="isDisplayCreate" [responsive]="true"
+    showEffect="fade" (onHide)="reset()" [modal]="true" [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='addUserManoForm' aria-label="" (ngSubmit)="save()" #addUserManoForm="ngForm" role="form">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>User Name*</td>
+                <td>
+                    <input pattern="^[a-z][a-z0-9 _-]+" (change)="replaceSpaceUsername()" [pKeyFilter]="blockSpace"
+                        type="text" name="manoUsername" [(ngModel)]="newUserMano.manoUsername" minlength="3" maxlength="20"
+                        #manoUsername="ngModel" required />
+                    <div *ngIf="manoUsername.invalid && (manoUsername.dirty || manoUsername.touched)">
+                        <div *ngIf="manoUsername.errors.pattern" class="mess_valid">
+                            Invalid username. Usernames must start with a letter. Allowed characters are a-z, 0-9, _, -
+                        </div>
+                        <div *ngIf="manoUsername.errors.minlength" class="mess_valid">
+                            Usernames must be between 3 and 20 characters.
+                        </div>
+                        <div *ngIf="manoUsername.errors?.required && manoUsername.touched" class="mess_valid">
+                            User Name is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Password*</td>
+                <td>
+                    <input type="password" name="manoUserPassword" [pattern]="password_regex" (change)="replaceSpacePassword()" [pKeyFilter]="blockSpace"
+                        [(ngModel)]="newUserMano.manoUserPassword" #manoUserPassword="ngModel" minlength="8" maxlength="25" required />
+                    <div *ngIf="manoUserPassword.invalid && (manoUserPassword.dirty || manoUserPassword.touched)">
+                        <div *ngIf="manoUserPassword.errors.pattern" class="mess_valid">
+                            Password must contain at least 1 uppercase, 1 lowercase, 1 numeric and 1 special character
+                        </div>
+                        <div *ngIf="manoUserPassword.errors.minlength" class="mess_valid">
+                            Password must be between 8 and 25 characters.
+                        </div>
+                    </div>
+                    <div *ngIf="manoUserPassword.errors?.required && manoUserPassword.touched" class="mess_valid">
+                        Password is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Confirm Password*</td>
+                <td>
+                    <input type="password" name="confirmPasswordText" [pattern]="password_regex"
+                           [pKeyFilter]="blockSpace" (change)="replaceSpaceConfirmPassword()" [(ngModel)]="confirmPassword" minlength="8" maxlength="25"
+                           #confirmPasswordText="ngModel" required manoBlockCopyPaste/>
+                    <div
+                        *ngIf="confirmPasswordText.invalid && (confirmPasswordText.dirty || confirmPasswordText.touched)">
+                        <div *ngIf="confirmPasswordText.errors.pattern" class="mess_valid">
+                            Password must contain at least 1 uppercase, 1 lowercase, 1 numeric and 1 special
+                            character
+                        </div>
+                        <div *ngIf="confirmPasswordText.errors.minlength" class="mess_valid">
+                            Password must be between 8 and 25 characters.
+                        </div>
+                        <div *ngIf="confirmPasswordText.errors?.required && confirmPasswordText.touched" class="mess_valid">
+                            Confirm Password is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Tenant*</td>
+                <td>
+                    <select name="selectTenant" [(ngModel)]="newUserMano.assignedTenant" #assignedTenant="ngModel" required>
+                        <option disabled selected value="null">- Select Tenant -</option>
+                        <option *ngFor="let tenant of tenants" [ngValue]="tenant.id">{{tenant.name}}</option>
+                    </select>
+                    <div *ngIf="assignedTenant.errors?.required && assignedTenant.touched" class="mess_valid">
+                        Tenant is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Role*</td>
+                <td>
+                    <select [(ngModel)]="newUserMano.manoUserRoles[0].roleType" #roleType="ngModel" name="role" required>
+                        <option disabled selected [value]="null">- Select Role -</option>
+                        <option value="PROVIDER_ADMIN">PROVIDER_ADMIN</option>
+                        <option value="PROVIDER_MEMBER">PROVIDER_MEMBER</option>
+                        <option value="TENANT_ADMIN">TENANT_ADMIN</option>
+                        <option value="TENANT_MEMBER">TENANT_MEMBER</option>
+                    </select>
+                    <div *ngIf="roleType.errors?.required && roleType.touched" class="mess_valid">
+                        Role is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div *ngIf="err_mess" class="alert alert-danger ng-star-inserted">{{err_mess}}</div>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="addUserManoForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" (click)="reset()" type="button">Reset</button>
+
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog styleClass="popup-edit vocs-popup"
+          blockScroll="true"
+          appendTo="body"
+          header="Update User Mano" [(visible)]="isDisplayEdit" [responsive]="true"
+    showEffect="fade" (onHide)="reset()" [modal]="true" [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='editUserManoForm' aria-label="" (ngSubmit)="edit()" #editUserManoForm="ngForm" role="form">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>User Name</td>
+                <td>
+                    {{editUserMano.manoUsername}}
+                </td>
+            </tr>
+            <tr>
+                <td>Role*</td>
+                <td>
+                    <select [(ngModel)]="editUserMano.manoUserRoles[0].roleType" required name="role">
+                        <option value="PROVIDER_ADMIN">PROVIDER_ADMIN</option>
+                        <option value="PROVIDER_MEMBER">PROVIDER_MEMBER</option>
+                        <option value="TENANT_ADMIN">TENANT_ADMIN</option>
+                        <option value="TENANT_MEMBER">TENANT_MEMBER</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="editUserManoForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" (click)="isDisplayEdit = false" type="button">
+                Cancel
+            </button>
+        </div>
+    </form>
+</p-dialog>

@@ -1,0 +1,22 @@
+@import '../../../../content/scss/vars';
+
+.main-content {
+  .table-wrap {
+    ::ng-deep table {
+      table-layout: auto;
+
+      tr {
+        td {
+          img {
+            width: 16px;
+          }
+
+          &:nth-of-type(8) {
+            text-align: left;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}

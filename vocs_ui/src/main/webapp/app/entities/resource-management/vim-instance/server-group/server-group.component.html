@@ -1,0 +1,113 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.servergroup.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" (onSort)="onSortOrPage()"
+            (onPage)="onSortOrPage()" [globalFilterFields]="['name', 'rule', 'members', 'metadata']" [paginator]="true"
+            [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.servergroup.title' | translate}}</div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="onCreateBtnClicked()" [hidden]="!isAdmin">Add New</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-serverGroup>
+                <tr>
+                    <td style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selectedItem" [value]="serverGroup" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">{{serverGroup?.name}}</td>
+                    <td>{{serverGroup?.rule}}</td>
+                    <td>{{serverGroup?.members}}</td>
+                    <td>
+                        <div *ngFor="let obj of objToString(serverGroup?.metadata); let i = index">{{obj[0]}}:
+                            {{obj[1]}}</div>
+                    </td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <span class="table-action" (click)="confirmDelete(serverGroup?.id)" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 6 : 4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog (onHide)="addForm.reset()" blockScroll="true" styleClass="popup-edit vocs-popup" appendTo="body"
+    header="Add Server Group" [(visible)]="isDisplayCreate" (onShow)="newServerGroup.serverGroupRule = null"
+    [responsive]="true" showEffect="fade" [modal]="true" [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='addForm' novalidate (ngSubmit)="save()" #addForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Name*</td>
+                <td>
+                    <input type="text" (blur)="newServerGroup.serverGroupName = newServerGroup.serverGroupName.trim()"
+                        name="serverGroupName" [(ngModel)]="newServerGroup.serverGroupName" minlength="3" maxlength="20"
+                        pattern="[A-Za-z0-9 _-]+" #serverGroupName="ngModel" required />
+                    <div *ngIf="serverGroupName.invalid && (serverGroupName.dirty || serverGroupName.touched)">
+                        <div *ngIf="serverGroupName.errors.pattern" class="mess_valid">
+                            Name must not be contains special characters.
+                        </div>
+                        <div *ngIf="serverGroupName.errors.minlength" class="mess_valid">
+                            Name must be between 3 and 20 characters.
+                        </div>
+                        <div *ngIf="serverGroupName.errors?.required && serverGroupName.touched" class="mess_valid">
+                            Name is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Rule*</td>
+                <td>
+                    <select name="serverGroupRule" [(ngModel)]="newServerGroup.serverGroupRule"
+                        #serverGroupRule="ngModel" required>
+                        <option value="null" disabled>- Select -</option>
+                        <option value="AFFINITY">AFFINITY</option>
+                        <option value="ANTI_AFFINITY">ANTI_AFFINITY</option>
+                    </select>
+                    <div *ngIf="serverGroupRule.errors?.required && serverGroupRule.touched" class="mess_valid">
+                        Rule is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button type="submit" class="mano-btn" [disabled]="addForm.form.invalid || isSaving">Create</button>
+            <button class="sub-btn mano-btn" (click)="addForm.reset()" type="button">Reset</button>
+        </div>
+    </form>
+</p-dialog>

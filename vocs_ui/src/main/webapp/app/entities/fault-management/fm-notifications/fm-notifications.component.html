@@ -1,0 +1,50 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.fNotifications.header' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="fmNotifications" [globalFilterFields]="['id', 'notificationType', 'subscriptionId', 'alarm.id']" [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [pSortableColumn]="'id'">ID
+                        <p-sortIcon [field]="'id'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'notificationType'">Type
+                        <p-sortIcon [field]="'notificationType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'subscriptionId'">Subscription ID
+                        <p-sortIcon [field]="'subscriptionId'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'alarm.id'">Alarm ID
+                        <p-sortIcon [field]="'alarm.id'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'timeStamp'">Time
+                        <p-sortIcon [field]="'timeStamp'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-fmNotification>
+                <tr>
+                    <td>{{fmNotification.id}}</td>
+                    <td>{{fmNotification.notificationType}}</td>
+                    <td>{{fmNotification.subscriptionId}}</td>
+                    <td>{{fmNotification.alarm.id}}</td>
+                    <td>{{fmNotification.timeStamp | date: 'HH:mm:ss dd/MM/yyyy '}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="5">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+

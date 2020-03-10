@@ -1,0 +1,134 @@
+<div id="sidebar" [class.show-sidebar]="screenWidth > 1024" #sidebar>
+    <ul class="side-nav">
+        <li [class.active]="currentRoute === '/'">
+            <a routerLink="/">
+                <img src="../../../content/images/overview.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.overview.title"></span>
+            </a>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate': checkRoute('/nsd')}">
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/catalogue.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.catalogue.title">Catalogue</span>
+            </a>
+            <ul class="sub-menu">
+                <li [class.active]="checkRoute('/nsd') && currentRoute !== '/nsd-subscriptions' && currentRoute !== '/nsd-notifications'">
+                    <a routerLink="nsd" jhiTranslate="mano.nsDescriptors.title">NS descriptors</a>
+                </li>
+                <li [class.active]="currentRoute === '/nsd-subscriptions'">
+                    <a routerLink="nsd-subscriptions" jhiTranslate="mano.nsdSubscriptions.title">NSD subscriptions</a>
+                </li>
+                <li [class.active]="currentRoute === '/nsd-notifications'">
+                    <a routerLink="nsd-notifications" jhiTranslate="mano.nsdNotifications.title">NSD notifications</a>
+                </li>
+            </ul>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate': checkRoute('/nslcm') || currentRoute === '/ns-instance-subscriptions' || currentRoute === '/ns-instance-notifications'}">
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/orc.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.orchestrateNs.title">Orchestrate NS</span>
+            </a>
+            <ul class="sub-menu">
+                <li [class.active]="checkRoute('/nslcm')">
+                    <a routerLink="nslcm" jhiTranslate="mano.nsInstances.title">Ns Instances</a>
+                </li>
+                <li [class.active]="currentRoute === '/ns-instance-subscriptions'">
+                    <a routerLink="ns-instance-subscriptions" jhiTranslate="mano.nsInstanceSubscriptions.title">Ns Instance Subscriptions</a>
+                </li>
+                <li [class.active]="currentRoute === '/ns-instance-notifications'">
+                    <a routerLink="ns-instance-notifications" jhiTranslate="mano.nsInstanceNotifications.title">Ns Instance Notifications</a>
+                </li>
+            </ul>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate': checkRoute('/vims')}" >
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/vim.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.manageVim.title">Manage Vims</span>
+            </a>
+            <ul class="sub-menu">
+                <li [class.active]="checkRoute('/vims')">
+                    <a routerLink="vims" jhiTranslate="mano.vimInstances.nameSibar">Vim Instances</a>
+                </li>
+            </ul>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate' : checkRoute('/nspm') || checkRoute('/hppm')}">
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/performance.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.performance.title">Performance</span>
+            </a>
+            <ul class="sub-menu">
+                <li class="nav-item-container" [ngClass]="{'expanded active': checkRoute('/nspm')}">
+                    <a jhiTranslate="mano.ns.title">NS</a>
+                    <ul class="sub-menu">
+                        <li [class.active]="checkRoute('/nspm/pmjobs')">
+                            <a routerLink="/nspm/pmjobs" jhiTranslate="mano.pmJobs.title">PM Jobs</a>
+                        </li>
+                        <li [class.active]="checkRoute('/nspm/thresholds')">
+                            <a routerLink="/nspm/thresholds" jhiTranslate="mano.thresholds.title">Thresholds</a>
+                        </li>
+                        <li [class.active]="checkRoute('/nspm/subscription')">
+                            <a routerLink="/nspm/subscription" jhiTranslate="mano.subscriptions.title">Subscriptions</a>
+                        </li>
+                        <li [class.active]="currentRoute === '/nspm/notification'">
+                            <a routerLink="/nspm/notification" jhiTranslate="mano.notifications.title">Notifications</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item-container" [ngClass]="{'expanded active': checkRoute('/hppm')}">
+                    <a jhiTranslate="mano.hypervisor.title">Hypervisor</a>
+                    <ul class="sub-menu">
+                        <li [class.active]="checkRoute('/hppm/pmjobs')">
+                            <a routerLink="/hppm/pmjobs" jhiTranslate="mano.pmJobs.title">PM Jobs</a>
+                        </li>
+                        <li [class.active]="checkRoute('/hppm/thresholds')">
+                            <a routerLink="/hppm/thresholds" jhiTranslate="mano.thresholds.title">Thresholds</a>
+                        </li>
+                        <li [class.active]="checkRoute('/hppm/subscription')">
+                            <a routerLink="/hppm/subscription" jhiTranslate="mano.subscriptions.title">Subscriptions</a>
+                        </li>
+                        <li [class.active]="currentRoute === '/hppm/notification'">
+                            <a routerLink="/hppm/notification" jhiTranslate="mano.nsdNotifications.titleHypervisor">Notifications</a>
+                        </li>
+                    </ul>
+            </ul>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate': checkRoute('/nsfm')}">
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/cog.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.faultManagement.title">Fault Management</span>
+            </a>
+            <ul class="sub-menu">
+                <li [class.active]="checkRoute('/nsfm/alarm')">
+                    <a routerLink="nsfm/alarm" jhiTranslate="mano.alarms.title">Alarms</a>
+                </li>
+                <li [class.active]="checkRoute('/nsfm/subscription')">
+                    <a routerLink="nsfm/subscription" jhiTranslate="mano.fSubscriptions.title">Subscriptions</a>
+                </li>
+                <li [class.active]="checkRoute('/nsfm/notification')">
+                    <a routerLink="nsfm/notification" jhiTranslate="mano.fNotifications.title">Notifications</a>
+                </li>
+            </ul>
+        </li>
+        <li [class.active]="currentRoute === '/tenants'" (click)="setActive($event)">
+            <a routerLink="tenants">
+                <img src="../../../content/images/user-mano.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.tenant.title">Tenant</span>
+            </a>
+        </li>
+        <li (click)="setActive($event)" class="nav-item-container" [ngClass]="{'expanded hidden-activate': currentRoute === '/supporting-services' || currentRoute === '/mano-services'}">
+            <a (click)="onNavItemContainerClick();">
+                <img src="../../../content/images/support.png" alt="nav item ico"/>
+                <span jhiTranslate="mano.supportingService.service">Service</span>
+            </a>
+            <ul class="sub-menu">
+                <li [class.active]="currentRoute === '/supporting-services'">
+                    <a routerLink="supporting-services" jhiTranslate="mano.supportingService.support">Support</a>
+                </li>
+                <li [class.active]="currentRoute === '/mano-services'">
+                    <a routerLink="mano-services" jhiTranslate="mano.manoService.title">Mano</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

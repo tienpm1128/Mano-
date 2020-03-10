@@ -1,0 +1,81 @@
+<div id="header">
+    <div class="logo">
+        <div #sidebarIcon class="hamburger hamburger--squeeze" [class.is-active]="screenWidth > 1024" (click)="toggleNav($event)">
+            <div class="hamburger-box">
+                <div class="hamburger-inner"></div>
+            </div>
+        </div>
+        <a class="logo" routerLink="/">
+            <img src="../../../content/images/logo.png" alt="icon"/>
+        </a>
+    </div>
+    <div class="toolbar">
+        <div class="notification">
+            <span class="icon">
+                <fa-icon [icon]="['fas','bell']"></fa-icon>
+            </span>
+            <ul>
+                <ng-container *ngFor="let notification of notifications">
+                    <li *ngIf="notification?.notificationType">{{notification?.notificationType}}</li>
+                </ng-container>
+                <li *ngIf="notifications?.length === 0">No entries</li>
+                <li *ngIf="notifications?.length > 0">
+                    <span (click)="clearNotification()">Clear all</span>
+                </li>
+            </ul>
+        </div>
+        <div class="user-wrap">
+            <span class="logged-user">
+                <img src="../../../content/images/user.png" alt="icon"/> Welcome {{loggedUser.username}}
+            </span>
+            <ul>
+                <li>
+                    <a (click)="logout()">
+                        <img src="../../../content/images/logout.png" alt="icon"/>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="user-wrap" *ngIf="loggedVim">
+            <span class="logged-user">
+                <img src="../../../content/images/user.png" alt="icon"/> Vim info
+            </span>
+            <ul>
+                <li>
+                    <a>
+                        <img src="../../../content/images/login.png" alt="icon"/>{{loggedVim?.vimName}}
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <img src="../../../content/images/user.png" alt="icon"/>{{loggedVim?.username}}
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <img src="../../../content/images/folder2.png" alt="icon"/>{{loggedVim?.projectName}}
+                    </a>
+                </li>
+                <li>
+                    <a (click)="logoutVim()">
+                        <img src="../../../content/images/logout.png" alt="icon"/>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<p-confirmDialog #confirmDialog styleClass="popup-delete vocs-popup"></p-confirmDialog>
+
+<p-toast (onClose)="decreaseNumofNotifications()" [styleClass]="specialToast ? 'special-notification' : ''">
+    <ng-template let-message pTemplate="message">
+        <div class="message-wrap" [ngClass]="{'vnf-success': message?.severity === 'vnfSuccess', 'vnf-error': message?.severity === 'vnfError', 'icon-warning': notifiIcon === 1, 'icon-up': notifiIcon === 2, 'alarm': message?.severity === 'alarm'}">
+            <img *ngIf="message?.severity?.toLowerCase() === 'error'" src="../../../content/images/bell.png" alt="icon"/>
+            <img *ngIf="message?.severity?.toLowerCase() === 'success'" src="../../../content/images/bell-success.png" alt="icon"/>
+            <div class="message-content">
+                <div class="summary">{{message?.summary}}</div>
+                <div class="detail">{{message?.detail}}</div>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

@@ -1,0 +1,30 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="form-wrap">
+        <div class="page-heading" jhiTranslate="mano.vimInstances.login"></div>
+        <form class="login-form" role="form" (ngSubmit)="loginVim()" [formGroup]="loginForm">
+            <div class="form-group" [class.invalid]="loginForm.get('username').errors?.required && loginForm.get('username').touched">
+                <img src="../../../../../content/images/user.png" alt="icon"/>
+                <input (focus)="authenticationError = false" type="text" class="form-control" name="username" id="username" placeholder="{{'login.form.username.placeholder' | translate}}" formControlName="username" [pKeyFilter]="blockSpace" required/>
+            </div>
+            <div style="text-align: left;" *ngIf="loginForm.get('username').errors?.required && loginForm.get('username').touched" class="mess_valid" >
+                Username is required
+            </div>
+
+            <div class="form-group" [class.invalid]="loginForm.get('password').errors?.required && loginForm.get('password').touched">
+                <img src="../../../../../content/images/lock.png" alt="icon"/>
+                <input (focus)="authenticationError = false" type="password" class="form-control" name="password" id="password" placeholder="{{'login.form.password.placeholder' | translate}}" formControlName="password" required/>
+            </div>
+            <div style="text-align: left;" *ngIf="loginForm.get('password').errors?.required && loginForm.get('password').touched" class="mess_valid" >
+                Password is required
+            </div>
+            <br *ngIf="loginForm.get('password').errors?.required && loginForm.get('password').touched" >
+
+            <div class="popup-btns">
+                <button type="submit" class="mano-btn" [disabled]="loginForm.invalid" jhiTranslate="login.form.button">Sign in</button>
+                <button type="reset" class="sub-btn mano-btn" (click)="authenticationError = false; loginForm.reset()">Reset</button>
+                <div class="alert alert-danger" *ngIf="authenticationError" jhiTranslate="login.messages.error.authentication">Invalid username or password</div>
+            </div>
+        </form>
+    </div>
+</div>

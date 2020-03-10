@@ -1,0 +1,141 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.nsInstances.title' | translate}}
+</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" (onSort)="onSortOrPage()" (onPage)="onSortOrPage()"
+            [globalFilterFields]="['id', 'nsInstanceName', 'nsInstanceDescription', 'nsState']" [paginator]="true"
+            [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10" [first]="first">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [hidden]="!isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.nsInstances.title' | translate}}</div>
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplayCreate = true"
+                            [hidden]="!isAdmin">
+                            <svg class="icon-create" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 1V11" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M11 6H1" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            Create
+                        </button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nsInstance>
+                <tr>
+                    <td [hidden]="!isAdmin" style="width: 65px;">
+                        <p-checkbox name="selectedItem" [disabled]="nsInstance?.nsState === 'INSTANTIATED'"
+                            [value]="nsInstance" [(ngModel)]="selecteds" (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">
+                        <a [routerLink]="['/nslcm', nsInstance?.id]">{{nsInstance?.nsInstanceName}}</a>
+                    </td>
+                    <td>{{nsInstance?.nsInstanceDescription}}</td>
+                    <td>{{nsInstance?.nsState}}</td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <button [disabled]="isAdmin === false || nsInstance?.nsState === 'INSTANTIATED'"
+                            class="table-action" (click)="confirmDelete(nsInstance?.id)">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M2.5 6.66699V17.5003C2.5 18.1634 2.76339 18.7993 3.23223 19.2681C3.70107 19.7369 4.33696 20.0003 5 20.0003H15C15.663 20.0003 16.2989 19.7369 16.7678 19.2681C17.2366 18.7993 17.5 18.1634 17.5 17.5003V6.66699H2.5ZM7.5 15.8337H5.83333V10.0003H7.5V15.8337ZM10.8333 15.8337H9.16667V10.0003H10.8333V15.8337ZM14.1667 15.8337H12.5V10.0003H14.1667V15.8337Z"
+                                    fill="#ED2E4F" />
+                                <path
+                                    d="M19.1667 3.33333H14.1667V0.833333C14.1667 0.61232 14.0789 0.400358 13.9226 0.244078C13.7663 0.0877974 13.5543 0 13.3333 0L6.66667 0C6.44565 0 6.23369 0.0877974 6.07741 0.244078C5.92113 0.400358 5.83333 0.61232 5.83333 0.833333V3.33333H0.833333C0.61232 3.33333 0.400358 3.42113 0.244078 3.57741C0.0877974 3.73369 0 3.94565 0 4.16667C0 4.38768 0.0877974 4.59964 0.244078 4.75592C0.400358 4.9122 0.61232 5 0.833333 5H19.1667C19.3877 5 19.5996 4.9122 19.7559 4.75592C19.9122 4.59964 20 4.38768 20 4.16667C20 3.94565 19.9122 3.73369 19.7559 3.57741C19.5996 3.42113 19.3877 3.33333 19.1667 3.33333ZM7.5 1.66667H12.5V3.33333H7.5V1.66667Z"
+                                    fill="#ED2E4F" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 5 : 3">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" (onHide)="addNew.reset()"
+    header="Create Ns Instance" [(visible)]="isDisplayCreate" [responsive]="true" showEffect="fade" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form name="addNew" #addNew="ngForm" (ngSubmit)="save()">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>NSD*</td>
+                <td>
+                    <select [(ngModel)]="selectedNsd" name="nsd" #nsd="ngModel" required>
+                        <option value="null" selected disabled>- Select -</option>
+                        <ng-container *ngFor="let nsd of nsds">
+                            <option [ngValue]="nsd"
+                                *ngIf="nsd?.nsdOnboardingStateType === 'ONBOARDED' && nsd?.nsdOperationalStateType === 'ENABLED'">
+                                {{nsd.nsdName}}</option>
+                        </ng-container>
+                    </select>
+                    <div *ngIf="nsd.errors?.required && nsd.touched" class="mess_valid">
+                        NSD is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Name*</td>
+                <td>
+                    <input (blur)="newNsInstance.nsName=newNsInstance.nsName?.trim()" pattern="[A-Za-z0-9 _-]+"
+                        #nsName="ngModel" type="text" name="nsName" [(ngModel)]="newNsInstance.nsName" minlength="3"
+                        maxlength="25" required />
+                    <div *ngIf="nsName.errors?.pattern" class="mess_valid">
+                        Name must not be contains special characters.
+                    </div>
+                    <div *ngIf="nsName.errors?.minlength" class="mess_valid">
+                        Name must be between 3 - 25 characters
+                    </div>
+                    <div *ngIf="nsName.errors?.required && nsName.touched" class="mess_valid">
+                        Name is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Description*</td>
+                <td>
+                    <textarea (blur)="newNsInstance.nsDescription=newNsInstance.nsDescription?.trim()" type="text"
+                        name="nsDescription" maxlength="250" [(ngModel)]="newNsInstance.nsDescription"
+                        #nsDescription="ngModel" required></textarea>
+                    <div *ngIf="nsDescription.errors?.required && nsDescription.touched" class="mess_valid">
+                        Description is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn" type="submit" [disabled]="addNew.form.invalid || isSaving">Save</button>
+            <button class="sub-btn mano-btn" type="reset" (click)="selectedNsd = null">Reset</button>
+        </div>
+    </form>
+</p-dialog>

@@ -1,0 +1,13 @@
+{
+  "mano": {
+    "vimInstances": {
+      "title": "Open Stack Instances",
+      "page-title": "Vim Instances",
+      "nameSibar": "Vim Instances",
+      "header": "OpenStack Instances List",
+      "login": "Login Vim",
+      "chooseProject": "Select Project",
+      "addVim": "Add Vim"
+    }
+  }
+}

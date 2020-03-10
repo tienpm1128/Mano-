@@ -1,0 +1,297 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.userVim.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value']?.trim(), 'contains')">
+    </div>
+</div>
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" (onSort)="onSortOrPage()"
+            (onPage)="onSortOrPage()"
+            [globalFilterFields]="['username', 'description', 'email', 'domainName','enabled']" [paginator]="true"
+            [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col" >
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.nsInstances.title' | translate}}</div>
+                    </th>
+                    <th scope="col" >
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplay = true; newUserVim.enabled = true" [hidden]="!isAdmin">Create
+                            User</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-userVim>
+                <tr>
+                    <td style="width: 10%;" *ngIf="isAdmin">
+                        <p-checkbox name="selectedItem" [value]="userVim" [(ngModel)]="selecteds" (onChange)="check()">
+                        </p-checkbox>
+                    </td>
+                    <td class="text-left">{{userVim.username}}</td>
+                    <td>{{userVim.description}}</td>
+                    <td>{{userVim.email}}</td>
+                    <td>
+                        <img [src]="(userVim.enabled === true) ? '../../../../../content/images/enabled.png' : '../../../../../content/images/disabled.png'"
+                            alt="icon" />
+                    </td>
+                    <td>{{userVim.domainName}}</td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <span class="table-action" pTooltip="Edit" (click)="displayFormEdit(userVim)"
+                            tooltipPosition="bottom" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/edit.png" alt="icon" />
+                        </span>
+                        <span class="table-action" (click)="confirmDelete(userVim.id)" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 7 : 5">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- ADD USER VIM -->
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body"
+    (onShow)=" addForm.reset(); displayAddNew(); reset();" [header]="'Create User'" [(visible)]="isDisplay"
+    [responsive]="true" showEffect="fade" [modal]="true" [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='addForm' (ngSubmit)="save()" #addForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Username*</td>
+                <td>
+                    <input pattern="^[A-Za-z]+[a-zA-Z0-9_-]*"
+                        (blur)="newUserVim.username=newUserVim.username?.trim(); replaceSpaceUsername()" type="text"
+                        name="username1" [(ngModel)]="newUserVim.username" minlength="3" maxlength="20"
+                        #username1="ngModel" [pKeyFilter]="blockSpace" required />
+                    <div *ngIf="username1.invalid && (username1.dirty || username1.touched)">
+                        <div *ngIf="username1.errors.pattern" class="mess_valid">
+                            Invalid Username. Username must start with a letter.<br>Allowed characters are a-z, A-Z,
+                            0-9, _, -
+                        </div>
+                        <div *ngIf="username1.errors.minlength" class="mess_valid">
+                            Username must be between 3 and 20 characters.
+                        </div>
+                        <div *ngIf="username1.errors?.required && username1.touched" class="mess_valid">
+                            Username is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <textarea (blur)="newUserVim.description=newUserVim.description?.trim()" type="text"
+                        name="description" [(ngModel)]="newUserVim.description" maxlength="250"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <input type="email" (blur)="newUserVim.email=newUserVim.email?.trim()" name="email"
+                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" #email1="ngModel"
+                        [(ngModel)]="newUserVim.email" />
+                    <div *ngIf="email1.invalid && (email1.dirty || email1.touched)">
+                        <div *ngIf="email1.errors.pattern" class="mess_valid">
+                            Invalid format email
+                        </div>
+                        <div *ngIf="email1.errors?.required && email1.touched" class="mess_valid">
+                            Email is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Password*</td>
+                <td>
+                    <input type="password" [pKeyFilter]="blockSpace" (change)="replaceSpacePassword()"
+                        [pattern]="password_regex" name="password" [(ngModel)]="newUserVim.password" #password="ngModel"
+                        minlength="8" maxlength="25" required />
+                    <div *ngIf="password.errors?.pattern" class="mess_valid">
+                        Password must contain at least 1 uppercase, 1 lowercase, 1 numeric and 1 special character
+                    </div>
+                    <div *ngIf="password.errors?.minlength" class="mess_valid">
+                        Password must be between 8 and 25 characters.
+                    </div>
+                    <div *ngIf="password.errors?.required && password.touched" class="mess_valid">
+                        Password is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Confirm Password*</td>
+                <td>
+                    <input type="password" [pKeyFilter]="blockSpace" (change)="replaceSpaceConfirmPassword()"
+                        [pattern]="password_regex" name="confirmPasswordText" [(ngModel)]="confirmPassword"
+                        minlength="8" maxlength="25" #confirmPasswordText="ngModel" required manoBlockCopyPaste />
+                    <div
+                        *ngIf="confirmPasswordText.invalid && (confirmPasswordText.dirty || confirmPasswordText.touched)">
+                        <div *ngIf="confirmPasswordText.errors.pattern" class="mess_valid">
+                            Confirm Password must contain at least 1 uppercase, 1 lowercase, 1 numeric and 1 special
+                            character
+                        </div>
+                        <div *ngIf="confirmPasswordText.errors.minlength" class="mess_valid">
+                            Confirm Password must be between 8 and 25 characters.
+                        </div>
+                        <div *ngIf="confirmPasswordText.errors?.required && confirmPasswordText.touched"
+                            class="mess_valid">
+                            Confirm Password is required
+                        </div>
+                    </div>
+                    <div *ngIf="confirmPassword !== newUserVim.password && confirmPasswordText.touched && !confirmPasswordText.errors?.required"
+                        class="mess_valid">
+                        Please enter the same password as above
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Primary Project</td>
+                <td>
+                    <select name="selectedProject" [(ngModel)]="newUserVim.projects" disabled>
+                        <option value="null">- Select a project -</option>
+                        <option *ngFor="let project of projects" [ngValue]="project">{{project.projectName}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td>
+                    <select name="selectedRole" [(ngModel)]="selectedRole.roleType">
+                        <option value="null">- Select a role -</option>
+                        <option value="PROVIDER_ADMIN">PROVIDER ADMIN</option>
+                        <option value="PROVIDER_MEMBER">PROVIDER MEMBER</option>
+                        <option value="TENANT_ADMIN">TENANT ADMIN</option>
+                        <option value="TENANT_MEMBER">TENANT MEMBER</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Enabled</td>
+                <td>
+                    <p-inputSwitch [(ngModel)]="newUserVim.enabled" name="enabled"></p-inputSwitch>
+                </td>
+            </tr>
+        </table>
+        <div *ngIf="err_mess" class="alert alert-danger ng-star-inserted">{{err_mess}}</div>
+        <div class="popup-btns">
+            <button class="mano-btn"
+                [disabled]="addForm.form.invalid || isSaving || confirmPassword !== newUserVim.password"
+                type="submit">Save</button>
+            <button class="sub-btn mano-btn" (click)="reset()" type="reset">Reset</button>
+        </div>
+    </form>
+</p-dialog>
+<!-- ADD USER VIM -->
+
+<!-- EDIT USER VIM -->
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" (onHide)="reset(); editForm.reset()"
+    [header]="'Update User'" [(visible)]="isEditing" [responsive]="true" showEffect="fade" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='editForm' novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Username*</td>
+                <td>
+                    <input pattern="^[A-Za-z]+[a-zA-Z0-9_-]*"
+                        (blur)="editUserVim.username=editUserVim.username?.trim(); replaceSpaceUsername()" type="text"
+                        name="username" [(ngModel)]="editUserVim.username" minlength="3" maxlength="20"
+                        #username="ngModel" [pKeyFilter]="blockSpace" required />
+                    <div *ngIf="username.invalid && (username.dirty || username.touched)">
+                        <div *ngIf="username.errors.pattern" class="mess_valid">
+                            Invalid username. Username must start with a letter.<br>Allowed characters are a-z, A-Z,
+                            0-9, _, -
+                        </div>
+                        <div *ngIf="username.errors.minlength" class="mess_valid">
+                            Username must be between 3 and 20 characters.
+                        </div>
+                        <div *ngIf="username.errors?.required" class="mess_valid">
+                            Username is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <textarea (blur)="editUserVim.description=editUserVim.description?.trim()" type="text"
+                        name="description" [(ngModel)]="editUserVim.description" maxlength="250"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <input type="text" (blur)="editUserVim.email=editUserVim.email?.trim()" name="email"
+                        pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" #email="ngModel"
+                        [(ngModel)]="editUserVim.email" />
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors.pattern" class="mess_valid">
+                            Invalid format email
+                        </div>
+                        <div *ngIf="email.errors?.required && email.touched" class="mess_valid">
+                            Email is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Primary Project</td>
+                <td>
+                    <select name="selectedProject" [(ngModel)]="editUserVim.projects" disabled>
+                        <option value="null">- Select a project -</option>
+                        <option *ngFor="let project of projects" [ngValue]="project">{{project.projectName}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td>
+                    <select name="selectedRole" [(ngModel)]="selectedRole.roleType">
+                        <option value="null">- Select a role -</option>
+                        <option value="PROVIDER_ADMIN">PROVIDER ADMIN</option>
+                        <option value="PROVIDER_MEMBER">PROVIDER MEMBER</option>
+                        <option value="TENANT_ADMIN">TENANT ADMIN</option>
+                        <option value="TENANT_MEMBER">TENANT MEMBER</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div *ngIf="err_mess" class="alert alert-danger ng-star-inserted">{{err_mess}}</div>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="editForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" (click)="isEditing = false" type="button"
+                jhiTranslate="entity.action.cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+<!-- EDIT USER VIM -->

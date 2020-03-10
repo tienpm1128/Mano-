@@ -1,0 +1,38 @@
+//color
+$base-color: #ed2e4f;
+$slave-color: white;
+// $text-color: #162c4d;
+$text-color: #111;
+$sub-text-color: #999;
+$border-color: #e5e5e5;
+$button-color: #1f8ecd;
+$button-sub-color: #efefef;
+$background-color: #f0f0f0;
+$paging-color: #f6f6f6;
+$checkbox-color: #999;
+//font-size
+$font-size-xs: 10px;
+$font-size-sm: 12px;
+$font-size-md: 15px;
+$font-size-lg: 16px;
+$font-size-xl: 18px;
+$font-size-xxl: 20px;
+$font-size-sl: 24px;
+//fonts-family
+$icon-font: 'FontAwesome';
+$main-font: 'SFProText-Regular', sans-serif;
+$sub-font: 'SFProText-Regular', sans-serif;
+//font weight
+$light: 300;
+$regular: 400;
+$medium: 500;
+$semi-bold: 600;
+$bold: 700;
+$extra-bold: 900;
+//transition
+$transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+
+@mixin max-content {
+  width: -moz-max-content;
+  width: max-content;
+}

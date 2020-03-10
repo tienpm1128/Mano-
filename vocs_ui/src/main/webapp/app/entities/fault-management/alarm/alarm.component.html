@@ -1,0 +1,147 @@
+<breadcrumb></breadcrumb>
+
+<div class="main-content">
+    <div class="page-heading">
+        <div class="heading-icon">
+            <span>
+                <fa-icon [icon]="['fas','bell']"></fa-icon>
+            </span>
+            {{'mano.alarms.title' | translate}}
+        </div>
+        <div class="filter-wrap">
+            <select name="ackFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'ackState', 'equals')">
+                <option selected value="">- Ack State -</option>
+                <option value="ACKNOWLEDGED">Acknowledged</option>
+                <option value="UNACKNOWLEDGED">Unacknowledged</option>
+            </select>
+            <select name="typeFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'faultType', 'equals')">
+                <option selected value="null">- Type -</option>
+                <option value="PHYSICAL_MANO">Physical Mano</option>
+                <option value="PHYSICAL_VIM">Physical Vim</option>
+                <option value="VNF_INSTANCE">Vnf Instance</option>
+                <option value="VIRTUAL_COMPUTE">Virtual compute</option>
+                <option value="SERVICE">Service</option>
+            </select>
+            <select name="eventFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'eventType', 'equals')">
+                <option selected value="">- Event -</option>
+                <option value="COMMUNICATIONS_ALARM">Communication</option>
+                <option value="QOS_ALARM">Qos</option>
+                <option value="PROCESSING_ERROR_ALARM">Processing error</option>
+                <option value="ENVIRONMENTAL_ALARM">Environmental</option>
+                <option value="EQUIPMENT_ALARM">Equipment</option>
+            </select>
+            <select name="severityFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'perceivedSeverity', 'equals')">
+                <option selected value="">- Severity -</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="MAJOR">Major</option>
+                <option value="MINOR">Minor</option>
+                <option value="WARNING">Warning</option>
+                <option value="INDETERMINATE">Indeterminate</option>
+                <option value="CLEARED">Cleared</option>
+            </select>
+            <select name="timeFilter" (change)="filterChart($event.target['value'])" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'].split(',') : null, 'eventTime', 'in')">
+                <option selected value="">- Time -</option>
+                <option *ngFor="let time of times" [value]="time">{{time[0] | date: 'dd/MM/yyyy'}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="graph-wrap row">
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Perceived Severity</div>
+                <p-chart type="horizontalBar" [data]="severityChart" [plugins]="chartPlugin" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Alarm Event Type</div>
+                <p-chart type="bar" [data]="eventTypeChart" [plugins]="chartPlugin" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Alarm Fault Type</div>
+                <p-chart type="bar" [data]="faultChart" [plugins]="chartPlugin" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <p-table #dt [value]="data" [globalFilterFields]="['ackState', 'faultType', 'eventType', 'perceivedSeverity', 'eventTime']" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [paginator]="true" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 90px;" [pSortableColumn]="'ackState'">Ack State
+                        <p-sortIcon [field]="'ackState'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 165px;" [pSortableColumn]="'faultType'">Fault Type
+                        <p-sortIcon [field]="'faultType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 140px;" [pSortableColumn]="'perceivedSeverity'">Severity
+                        <p-sortIcon [field]="'perceivedSeverity'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 235px;" [pSortableColumn]="'eventType'">Event Type
+                        <p-sortIcon [field]="'eventType'"></p-sortIcon>
+                    </th>
+                    <th scope="col">Instance ID</th>
+                    <th scope="col">Service</th>
+                    <th scope="col" style="width: 185px;" [pSortableColumn]="'managedObjectType'">Object Type
+                        <p-sortIcon [field]="'managedObjectType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'managedObjectTargetType'">Target Type
+                        <p-sortIcon [field]="'managedObjectTargetType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'enabled'">Enabled
+                        <p-sortIcon [field]="'enabled'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 175px;" [pSortableColumn]="'eventTime'">Time
+                        <p-sortIcon [field]="'eventTime'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-alarm>
+                <tr [style.background-color]="getColor(alarm.perceivedSeverity)">
+                    <td>
+                        <img *ngIf="alarm.ackState === 'ACKNOWLEDGED'" src="../../../../content/images/enabled.png" alt="icon"/>
+                        <span class="table-action" (click)="confirmEdit(alarm.id)" *ngIf="isAdmin && alarm.ackState === 'UNACKNOWLEDGED'">
+                            <img src="../../../../content/images/edit.png" alt="icon"/>
+                        </span>
+                    </td>
+                    <td>
+                        <a [routerLink]="['/nsfm/alarm', alarm.id]">{{alarm.faultType}}</a>
+                    </td>
+                    <td>
+                        <img *ngIf="alarm.perceivedSeverity === 'CRITICAL'" src="../../../../content/images/Critical.png" alt="icon"/>
+                        <img *ngIf="alarm.perceivedSeverity === 'MAJOR'" src="../../../../content/images/Major.png" alt="icon"/>
+                        {{alarm.perceivedSeverity}}
+                    </td>
+                    <td>{{alarm.eventType}}</td>
+                    <td>
+                        <div>{{alarm.objectInstanceId}}</div>
+                        <div>{{alarm.subObjectInstanceId}}</div>
+                    </td>
+                    <td>
+                        <div>{{alarm.subObjectInstanceName}}</div>
+                        <div>{{alarm.subObjectInstanceIp}}</div>
+                    </td>
+                    <td>
+                        {{alarm.managedObjectType}}
+                    </td>
+                    <td>{{alarm.managedObjectTargetType}}</td>
+                    <td>
+                        <img *ngIf="alarm.enabled" src="../../../../content/images/enabled.png" alt="icon"/>
+                        <img *ngIf="!alarm.enabled" src="../../../../content/images/disabled.png" alt="icon"/>
+                    </td>
+                    <td>{{alarm.eventTime | date:'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="10">{{'table.emptyMessage' | translate}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+

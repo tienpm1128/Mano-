@@ -1,0 +1,188 @@
+@import '../../../content/scss/vars';
+@import '~hamburgers/_sass/hamburgers/hamburgers';
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  .hamburger {
+    margin-right: 25px;
+    height: 65px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+    .hamburger-box {
+      width: 25px;
+      height: 17px;
+      pointer-events: none;
+
+      .hamburger-inner {
+        width: 25px;
+        height: 2px;
+        background-color: #555;
+
+        &::before,
+        &::after {
+          width: 25px;
+          height: 2px;
+          background-color: #555;
+        }
+
+        &::before {
+          top: -7px;
+        }
+
+        &::after {
+          bottom: -7px;
+        }
+      }
+    }
+
+    &.is-active {
+      .hamburger-box {
+        .hamburger-inner {
+          &::after {
+            bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  img {
+    height: 28px;
+  }
+}
+
+.toolbar {
+  height: 100%;
+  display: flex;
+
+  .notification {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .icon {
+      fa-icon {
+        font-size: $font-size-sl;
+        color: #999;
+        transition: 0.3s;
+      }
+
+      &:hover {
+        color: $base-color;
+      }
+    }
+
+    ul {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      min-width: 100%;
+      background-color: $slave-color;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s;
+
+      li {
+        font-family: $sub-font;
+        white-space: nowrap;
+        padding: 15px 20px;
+        display: block;
+        border-bottom: 1px solid $border-color;
+        transition: 0.3s;
+
+        @include max-content;
+
+        span {
+          color: #1e60e1;
+          cursor: pointer;
+        }
+
+        &:hover {
+          background-color: $background-color;
+        }
+
+        &:last-of-type {
+          border-bottom: none;
+
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      ul {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  .user-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+
+    .logged-user {
+      font-family: $sub-font;
+
+      img {
+        margin-right: 8px;
+        height: 28px;
+      }
+    }
+
+    ul {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      min-width: 100%;
+      background-color: $slave-color;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s;
+
+      li {
+        a {
+          font-family: $sub-font;
+          white-space: nowrap;
+          padding: 10px 15px;
+          display: block;
+          transition: 0.3s;
+
+          @include max-content;
+
+          img {
+            width: 22px;
+            margin-right: 9px;
+          }
+        }
+
+        &:hover {
+          background-color: $background-color;
+        }
+      }
+    }
+
+    &:hover {
+      ul {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+}

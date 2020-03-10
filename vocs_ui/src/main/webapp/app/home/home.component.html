@@ -1,0 +1,29 @@
+<div class="login-wrap">
+    <div class="form-wrap">
+        <img class="logo" src="../../content/images/logo.png" alt="logo"/>
+        <form class="login-form" role="form" (ngSubmit)="login()" [formGroup]="loginForm">
+            <div class="form-group" [class.invalid]="loginForm.get('username').errors?.required && loginForm.get('username').touched" >
+                <img src="../../content/images/user.png" alt="icon"/>
+                <input (focus)="authenticationError = false" type="text" (change)="loginForm.controls['username'].setValue(loginForm.get('username').value.trim())" class="form-control" name="username" id="username" placeholder="{{'login.form.username.placeholder' | translate}}" formControlName="username" [pKeyFilter]="blockSpace" autoFocus required/>
+            </div>
+            <div style="text-align: left;" *ngIf="loginForm.get('username').errors?.required && loginForm.get('username').touched" class="mess_valid" >
+                Username is required
+            </div>
+
+            <div class="form-group" [class.invalid]="loginForm.get('password').errors?.required && loginForm.get('password').touched">
+                <img src="../../content/images/lock.png" alt="icon"/>
+                <input (focus)="authenticationError = false" type="password" class="form-control" name="password" id="password" placeholder="{{'login.form.password.placeholder' | translate}}" formControlName="password" required/>
+            </div>
+            <div style="text-align: left;" *ngIf="loginForm.get('password').errors?.required && loginForm.get('password').touched" class="mess_valid" >
+                Password is required
+            </div>
+            <br *ngIf="loginForm.get('password').errors?.required && loginForm.get('password').touched" >
+
+            <button type="submit" [disabled]="loginForm.invalid" class="mano-btn" jhiTranslate="login.form.button"></button>
+
+            <div class="alert alert-danger" *ngIf="authenticationError && !isLogging" jhiTranslate="login.messages.error.authentication">
+                Invalid username or password
+            </div>
+        </form>
+    </div>
+</div>

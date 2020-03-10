@@ -1,0 +1,46 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.subscriptions.title' | translate}}</div>
+
+<div class="main-content">
+    <div class="block-title">Threshold Crossed Notification</div>
+    <div class="detail-wrap">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Ns Instance ID</td>
+                <td>{{nspmSubscription?.filter['nsInstanceSubscriptionFilter']?.nsInstanceIds[0]}}</td>
+            </tr>
+            <tr>
+                <td>Performance Metric</td>
+                <td>{{nspmSubscription['thresholdDetail']?.criteria?.performanceMetric}}</td>
+            </tr>
+            <tr>
+                <td>Threshold Value</td>
+                <td>{{nspmSubscription['thresholdDetail']?.criteria?.simpleThresholdDetails?.thresholdValue}}</td>
+            </tr>
+            <tr>
+                <td>Hysteresis</td>
+                <td>{{nspmSubscription['thresholdDetail']?.criteria?.simpleThresholdDetails?.hysteresis}}</td>
+            </tr>
+        </table>
+        <div class="vnf-wrap">
+            <div class="heading">Select VNF Instance to view Chart</div>
+            <div class="vnf">
+                <p-listbox [options]="vnfInstances" [(ngModel)]="selectedVnfInstances" optionLabel="vnfInstanceName" checkbox="true" multiple="true"></p-listbox>
+                <div class="select-chart">
+                    <select [(ngModel)]="chartType" (change)="changeChartType()">
+                        <option value="line">Line chart</option>
+                        <option value="bar">Bar chart</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="thresholdChart?.datasets?.length === 0" class="chart-wrap">
+        <p-chart #chart [type]="chartType" [options]="thresholdChart?.options" [data]="thresholdChart"></p-chart>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+
+nsquid:S2095Õ"QUse try-with-resources or close this "BufferedInputStream" in a "finally" clause.(–ÇìÌùÿÿÿÿ
+@squid:S1148ß"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+|squid:S1149Ä"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ôô¡Óüÿÿÿÿ
+osquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(ÎøÓ±úÿÿÿÿ
+€squid:S1192O"dDefine a constant instead of duplicating this literal "Not permission! Please login again." 3 times.(•ñ·ùÿÿÿÿ
+U
+squid:S106Ğ"9Replace this use of System.out or System.err by a logger.(ĞÙÀ‰ıÿÿÿÿ
+isquid:S2095Ö"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(Ó•£¹øÿÿÿÿ
+isquid:S00117T"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„â…ö
+jsquid:S00117¾"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„â…ö
+`squid:S11924"IDefine a constant instead of duplicating this literal "Success!" 3 times.(„®±Í
+dsquid:S2095Ë"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(úÈ©¼
+csquid:S1192["GDefine a constant instead of duplicating this literal "false!" 6 times.(®àŠ×úÿÿÿÿ
+nsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(¬ÉºÖøÿÿÿÿ
+Ysquid:UselessImportCheck"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ

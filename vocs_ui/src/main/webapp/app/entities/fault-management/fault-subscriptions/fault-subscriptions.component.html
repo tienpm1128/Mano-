@@ -1,0 +1,126 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.faultSubscriptions.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" (onSort)="onSortOrPage()" (onPage)="onSortOrPage()"
+            [globalFilterFields]="['id', 'filter.notificationTypes'.toString().replace(commaRegex, ', '), 'callbackUri']"
+            [paginator]="true" [rows]="10" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [first]="first">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.faultSubscriptions.title' | translate}}</div>
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" *ngIf="isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplay = true">Add Subscription</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-faultSubscription>
+                <tr>
+                    <td style="width: 65px;" *ngIf="isAdmin">
+                        <p-checkbox name="selectedItem" [value]="faultSubscription" [(ngModel)]="selecteds"
+                            (onChange)="check()"></p-checkbox>
+                    </td>
+                    <td class="text-left">
+                        <a [routerLink]="['/nsfm/subscription', faultSubscription.id]">
+                            <span class="text-danger"
+                            *ngFor="let notif of faultSubscription?.filter?.notificationTypes; let i = index">{{notif}}<em
+                                *ngIf="i < faultSubscription?.filter?.notificationTypes?.length - 1">,&nbsp;</em></span>
+                        </a>
+                    </td>
+                    <td style="overflow-wrap: break-word;">{{faultSubscription?.callbackUri}}</td>
+                    <td *ngIf="isAdmin" class="text-right">
+                        <span class="table-action" (click)="confirmDelete(faultSubscription.id)">
+                            <img src="../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 4 : 2">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- // -->
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" [header]="'Add Fm Subscription'"
+    [(visible)]="isDisplay" [responsive]="true" showEffect="fade" (onHide)="addForm.reset()" [modal]="true"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form name='addForm' (ngSubmit)="save()" #addForm="ngForm" role="form">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Select Ns Instance*</td>
+                <td>
+                    <select [(ngModel)]="selectedNsInstances" name="selectNsInstances" #selectNsIns="ngModel" required>
+                        <option [value]="null" disabled>- Select -</option>
+                        <option *ngFor="let nsInstance of nsInstances" [ngValue]="nsInstance">
+                            {{nsInstance?.nsInstanceName}}
+                        </option>
+                    </select>
+                    <div *ngIf="selectNsIns.errors?.required && selectNsIns.touched" class="mess_valid">
+                        Ns Instance is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Notification Type*</td>
+                <td>
+                    <select [(ngModel)]="notificationTypes" name="notificationTypes" #notificationType="ngModel"
+                        required>
+                        <option [value]="null" disabled>- Select -</option>
+                        <option value="ALARM_NOTIFICATION">Alarm notification</option>
+                        <option value="ALARM_CLEARED_NOTIFICATION">Alarm cleared notification</option>
+                        <option value="ALARM_LIST_REBUILT_NOTIFICATION">Alarm list rebuilt notification</option>
+                    </select>
+                    <div *ngIf="notificationType.errors?.required && notificationType.touched" class="mess_valid">
+                        Notification Type is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Callback URI*</td>
+                <td>
+                    <input [pattern]="uri_regex"
+                        (blur)="newFaultSubscription.callbackUri = newFaultSubscription.callbackUri?.trim()" type="text"
+                        name="callbackUri" [(ngModel)]="newFaultSubscription.callbackUri" #uri="ngModel"
+                        (change)="replaceSpace()" [pKeyFilter]="blockSpace" required />
+                    <div *ngIf="uri.errors?.pattern" class="mess_valid">
+                        Invalid format URI
+                    </div>
+                    <div *ngIf="uri.errors?.required && uri.touched" class="mess_valid">
+                        Callback URI is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button class="mano-btn" [disabled]="addForm.form.invalid || isSaving" type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="button" (click)="addForm.reset()">Reset</button>
+        </div>
+    </form>
+</p-dialog>

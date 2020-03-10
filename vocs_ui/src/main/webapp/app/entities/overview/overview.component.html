@@ -1,0 +1,395 @@
+<div class="page-heading" jhiTranslate="mano.overview.title"></div>
+
+<div *ngIf="isAdmin" class="total-wrap row">
+    <div class="square">
+        <a routerLink="/nsd" class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.nsd.title">NS Descriptors</div>
+            <p-chart type="doughnut" height="200px" [data]="totalNsdChart" [options]="chartNsdOptions"></p-chart>
+            <div class="chart-legend" *ngFor="let legend of totalNsdChart?.labels; let i = index">
+                <span [style.background-color]="arrColors[i]"></span>{{legend}}
+            </div>
+        </a>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.vnf.title">VNF Descriptors</div>
+            <p-chart type="doughnut" height="200px" [data]="totalVnfdChart" [options]="chartVnfdOptions"></p-chart>
+            <div class="chart-legend" *ngFor="let legend of totalVnfdChart?.labels; let i = index">
+                <span [style.background-color]="arrColors[i]"></span>{{legend}}
+            </div>
+        </div>
+    </div>
+    <div class="square">
+        <a routerLink="/nslcm" class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.nsInstances.title">Ns Instances</div>
+            <p-chart #nsInstanceChart type="doughnut" height="200px" [data]="totalNsInstanceChart" [options]="chartNsInstanceOptions"></p-chart>
+            <div class="chart-legend" *ngFor="let legend of totalNsInstanceChart?.labels; let i = index">
+                <span [style.background-color]="arrColors[i]"></span>{{legend}}
+            </div>
+        </a>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.vnfInstance.title">VNF Instances</div>
+            <p-chart type="doughnut" height="200px" [data]="totalVnfInstanceChart" [options]="chartVnfInstanceOptions"></p-chart>
+            <div class="chart-legend" *ngFor="let legend of totalVnfInstanceChart?.labels; let i = index">
+                <span [style.background-color]="arrColors[i]"></span>{{legend}}
+            </div>
+        </div>
+    </div>
+    <div class="square">
+        <a routerLink="/vims" class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.vim.title">Vim Instances</div>
+            <p-chart type="doughnut" height="200px" [data]="totalVimChart" [options]="chartVimOptions"></p-chart>
+            <div class="chart-legend" *ngFor="let legend of totalVimChart?.labels; let i = index">
+                <span [style.background-color]="arrColors[i]"></span>{{legend}}
+            </div>
+        </a>
+    </div>
+</div>
+
+<div *ngIf="isTenant" class="total-wrap row">
+    <div class="square">
+        <div class="square-wrap">
+            <a routerLink="/nsd" class="square-head" jhiTranslate="mano.nsd.title">NS descriptions</a>
+            <div class="count-number">{{totalNsdChart}}</div>
+        </div>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.vnf.title">VNF descriptors</div>
+            <div class="count-number">{{totalVnfdChart}}</div>
+        </div>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <a routerLink="/nslcm"  class="square-head" jhiTranslate="mano.nsInstances.title">Ns instances</a>
+            <div class="count-number">{{totalNsInstanceChart}}</div>
+        </div>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <div class="square-head" jhiTranslate="mano.vnfInstance.title">VNF instances</div>
+            <div class="count-number">{{totalVnfInstanceChart}}</div>
+        </div>
+    </div>
+    <div class="square">
+        <div class="square-wrap">
+            <a routerLink="/vims" class="square-head" jhiTranslate="mano.vimInstances.title">Vim instances</a>
+            <div class="count-number">{{totalVimChart}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="page-heading">
+        <div class="heading-icon">
+            <span>
+                <fa-icon [icon]="['fas','bell']"></fa-icon>
+            </span>
+            {{'mano.alarms.title' | translate}}
+        </div>
+        <div class="filter-wrap">
+            <select name="ackFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'ackState', 'equals')">
+                <option selected value="">- Ack State -</option>
+                <option value="ACKNOWLEDGED">Acknowledged</option>
+                <option value="UNACKNOWLEDGED">Unacknowledged</option>
+            </select>
+            <select name="typeFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'faultType', 'equals')">
+                <option selected value="null">- Type -</option>
+                <option value="PHYSICAL_MANO">Physical Mano</option>
+                <option value="PHYSICAL_VIM">Physical Vim</option>
+                <option value="VNF_INSTANCE">Vnf Instance</option>
+                <option value="VIRTUAL_COMPUTE">Virtual compute</option>
+                <option value="SERVICE">Service</option>
+            </select>
+            <select name="eventFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'eventType', 'equals')">
+                <option selected value="">- Event -</option>
+                <option value="COMMUNICATIONS_ALARM">Communication</option>
+                <option value="QOS_ALARM">Qos</option>
+                <option value="PROCESSING_ERROR_ALARM">Processing error</option>
+                <option value="ENVIRONMENTAL_ALARM">Environmental</option>
+                <option value="EQUIPMENT_ALARM">Equipment</option>
+            </select>
+            <select name="severityFilter" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'] : '', 'perceivedSeverity', 'equals')">
+                <option selected value="">- Severity -</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="MAJOR">Major</option>
+                <option value="MINOR">Minor</option>
+                <option value="WARNING">Warning</option>
+                <option value="INDETERMINATE">Indeterminate</option>
+                <option value="CLEARED">Cleared</option>
+            </select>
+            <select name="timeFilter" (change)="filterChart($event.target['value'])" (input)="dt.filter($event.target['value'] !== 'null' ? $event.target['value'].split(',') : null, 'eventTime', 'in')">
+                <option selected value="">- Time -</option>
+                <option *ngFor="let time of times" [value]="time">{{time[0] | date: 'dd/MM/yyyy'}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="graph-wrap row">
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Perceived Severity</div>
+                <p-chart type="horizontalBar" [plugins]="chartPlugin" [data]="severityChart" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Alarm Event Type</div>
+                <p-chart type="bar" [data]="eventTypeChart" [plugins]="chartPlugin" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+        <div class="col-graph col-lg-4 col-xs-12">
+            <div class="col-wrap">
+                <div class="col-heading">Alarm Fault Type</div>
+                <p-chart type="bar" [data]="faultChart" [plugins]="chartPlugin" [options]="barChartOptions"></p-chart>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <p-table #dt [value]="alarms" [globalFilterFields]="['ackState', 'faultType', 'eventType', 'perceivedSeverity', 'eventTime']" [paginator]="true" [pageLinks]="4" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 165px;" [pSortableColumn]="'faultType'">Fault Type
+                        <p-sortIcon [field]="'faultType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 140px;text-align: center;" [pSortableColumn]="'perceivedSeverity'">Severity
+                        <p-sortIcon [field]="'perceivedSeverity'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 235px;" [pSortableColumn]="'eventType'">Event Type
+                        <p-sortIcon [field]="'eventType'"></p-sortIcon>
+                    </th>
+                    <th scope="col">Instance ID</th>
+                    <th scope="col">Service</th>
+                    <th scope="col" style="width: 185px;" [pSortableColumn]="'managedObjectType'">Object Type
+                        <p-sortIcon [field]="'managedObjectType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'managedObjectTargetType'">Target Type
+                        <p-sortIcon [field]="'managedObjectTargetType'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'enabled'">Enabled
+                        <p-sortIcon [field]="'enabled'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 175px;" [pSortableColumn]="'eventTime'">Time
+                        <p-sortIcon [field]="'eventTime'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-alarm>
+                <tr [style.background-color]="getColor(alarm.perceivedSeverity)">
+                    <td>
+                        <a [routerLink]="['/nsfm/alarm', alarm.id]">{{alarm.faultType}}</a>
+                    </td>
+                    <td>
+                        <img *ngIf="alarm.perceivedSeverity === 'CRITICAL'" src="../../../content/images/Critical.png" alt="icon"/>
+                        <img *ngIf="alarm.perceivedSeverity === 'MAJOR'" src="../../../content/images/Major.png" alt="icon"/>
+                        {{alarm.perceivedSeverity}}
+                    </td>
+                    <td>{{alarm.eventType}}</td>
+                    <td>
+                        <div>{{alarm.objectInstanceId}}</div>
+                        <div>{{alarm.subObjectInstanceId}}</div>
+                    </td>
+                    <td>
+                        <div>{{alarm.subObjectInstanceName}}</div>
+                        <div>{{alarm.subObjectInstanceIp}}</div>
+                    </td>
+                    <td>
+                        {{alarm.managedObjectType}}
+                    </td>
+                    <td>{{alarm.managedObjectTargetType}}</td>
+                    <td>
+                        <img *ngIf="alarm.enabled" src="../../../content/images/enabled.png" alt="icon"/>
+                        <img *ngIf="!alarm.enabled" src="../../../content/images/disabled.png" alt="icon"/>
+                    </td>
+                    <td>{{alarm.eventTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="9">{{'table.emptyMessage' | translate}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="page-heading">
+        <div class="heading-icon">
+            <span>
+                <fa-icon [icon]="['fas','layer-group']"></fa-icon>
+            </span>
+            {{'mano.vimInstances.title' | translate}}
+        </div>
+    </div>
+    <div class="login-vim" *ngIf="loggedVims.length === 0">
+        <a (click)="toLoginVim()">{{'login.title' | translate}}</a> {{'mano.overview.loginVim' | translate}}
+    </div>
+    <ng-container *ngIf="loggedVims.length > 0">
+        <div class="vim-wrap" *ngFor="let loggedVim of loggedVims">
+            <div class="vim-name">{{loggedVim['vimName']}}</div>
+            <div class="chart-table-wrap">
+                <div class="chart-wrap">
+                    <div class="charts">
+                        <div class="chart">
+                            <p-chart type="doughnut" width="110px" height="110px" [data]="loggedVim['cpuChart']" [options]="chartOptions"></p-chart>
+                            <div class="chart-name">CPU</div>
+                        </div>
+                        <div class="chart">
+                            <p-chart type="doughnut" width="110px" height="110px" [data]="loggedVim['memoryChart']" [options]="chartOptions"></p-chart>
+                            <div class="chart-name">Memory</div>
+                        </div>
+                        <div class="chart">
+                            <p-chart type="doughnut" width="110px" height="110px" [data]="loggedVim['storageChart']" [options]="chartOptions"></p-chart>
+                            <div class="chart-name">Local Disk</div>
+                        </div>
+                        <div class="chart">
+                            <p-chart type="doughnut" width="110px" height="110px" [data]="loggedVim['networkChart']" [options]="chartOptions"></p-chart>
+                            <div class="chart-name">Network</div>
+                        </div>
+                    </div>
+                    <div *ngIf="isAdmin" class="icons">
+                        <div class="icon-wrap">
+                            <fa-icon [icon]="['fas', 'desktop']"></fa-icon>
+                            {{loggedVim['hypervisor']}} VM
+                        </div>
+                        <div class="icon-wrap">
+                            <fa-icon [icon]="['fas', 'cloud']"></fa-icon>
+                            {{loggedVim['nsInstances']}} Ns Instances
+                        </div>
+                        <div class="icon-wrap">
+                            <fa-icon [icon]="['fas', 'cloud-upload-alt']"></fa-icon>
+                            {{loggedVim['vnfInstances']}} VNF Instances
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="isTenant" class="icons">
+                    <div class="icon-wrap">
+                        <fa-icon [icon]="['fas', 'desktop']"></fa-icon>
+                        {{loggedVim['hypervisor']?.length}} VM
+                    </div>
+                    <div class="icon-wrap">
+                        <fa-icon [icon]="['fas', 'cloud']"></fa-icon>
+                        {{loggedVim['nsInstances']}} Ns Instances
+                    </div>
+                    <div class="icon-wrap">
+                        <fa-icon [icon]="['fas', 'cloud-upload-alt']"></fa-icon>
+                        {{loggedVim['vnfInstances']}} VNF Instances
+                    </div>
+                </div>
+                <div *ngIf="isAdmin" class="table-wrap">
+                    <p-table [value]="loggedVim['resourceQuota']" [paginator]="true" [rows]="10" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th scope="col" [pSortableColumn]="'username'">User
+                                    <p-sortIcon [field]="'username'"></p-sortIcon>
+                                </th>
+                                <th scope="col">CPU</th>
+                                <th scope="col">Memory</th>
+                                <th scope="col">Storage</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-quota>
+                            <tr>
+                                <td>{{quota['username']}}</td>
+                                <td>{{quota['virtualUsedCPU']}}/{{quota['virtualCPU']}}</td>
+                                <td>{{quota['localMemoryUsed']}}/{{quota['localMemory']}}</td>
+                                <td>{{quota['localDiskUsed']}}/{{quota['localDisk']}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="4">
+                                    {{'table.emptyMessage' | translate}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+            <div class="threshold-table table-wrap">
+                <p-table [value]="hypervisors" [scrollable]="true" [style]="{width: '100%'}" scrollHeight="300px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col" *ngFor="let threshold of loggedVim['thresholds']?.criteria">{{threshold['performanceMetric']}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Threshold</th>
+                            <th scope="col" *ngFor="let threshold of loggedVim['thresholds']?.criteria">{{threshold['simpleThresholdDetails']['thresholdValue']}} &plusmn; {{threshold['simpleThresholdDetails']['hysteresis']}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-hypervisor>
+                        <tr *ngIf="hypervisor?.reportData">
+                            <td>{{hypervisor?.hypervisorName}} - {{hypervisor?.hostIP}}</td>
+                            <td>
+                                <ng-container *ngFor="let report of hypervisor?.reportData">
+                                    <ng-container *ngFor="let threshold of vimThresholds">
+                                        <span *ngIf="report?.performanceMetric === threshold['performanceMetric']" [class.over-heat]="report?.performanceValue?.performanceValue > (threshold['simpleThresholdDetails']['thresholdValue'] + threshold['simpleThresholdDetails']['hysteresis']) || report?.performanceValue?.performanceValue < (threshold['simpleThresholdDetails']['thresholdValue'] - threshold['simpleThresholdDetails']['hysteresis'])">{{report?.performanceValue?.performanceValue}}</span>
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="loggedVim['thresholds']?.criteria?.length + 1">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<div *ngIf="isAdmin" class="tenant-wrap main-content">
+    <div class="page-heading">
+        <div class="heading-icon">
+            <span>
+                <fa-icon [icon]="['fas','user-circle']"></fa-icon>
+            </span>
+            Tenants
+        </div>
+    </div>
+    <div class="table-wrap">
+        <p-table [value]="tenants" [paginator]="true" [pageLinks]="4" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [pSortableColumn]="'name'">Tenant
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                    <th scope="col">User</th>
+                    <th scope="col">Role</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tenant>
+                <ng-container *ngIf="tenant?.users?.length > 0">
+                    <tr *ngFor="let user of tenant?.users; let i = index">
+                        <td *ngIf="i === 0" [attr.rowspan]="tenant?.users?.length">{{tenant?.name}}</td>
+                        <td>{{user?.username}}</td>
+                        <td>
+                            <span *ngFor="let role of user?.roles; let ii = index">{{role.roleType}}<em *ngIf="ii < user?.roles?.length - 1">,&nbsp;</em></span>
+                        </td>
+                    </tr>
+                </ng-container>
+                <tr *ngIf="!tenant?.users">
+                    <td>{{tenant?.name}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="3">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

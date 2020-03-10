@@ -1,0 +1,65 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  display: flex;
+  justify-content: center;
+
+  .form-wrap {
+    text-align: center;
+    width: 515px;
+    background: $slave-color;
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 45px;
+
+    .page-heading {
+      text-align: center;
+      display: block !important;
+    }
+
+    .login-form {
+      text-align: center;
+
+      .form-group {
+        padding: 12px 0;
+        border-bottom: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+
+        img {
+          width: 24px;
+          margin-right: 12px;
+        }
+
+        input {
+          border: none;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        &.invalid {
+          border-bottom: 1px solid $base-color;
+          margin-bottom: 5px;
+        }
+      }
+
+      .mano-btn {
+        display: inline-block;
+        margin-left: 0 !important;
+        margin-bottom: 15px;
+      }
+
+      .alert {
+        border: none;
+        border-radius: 6px;
+        margin: 0;
+      }
+    }
+  }
+}

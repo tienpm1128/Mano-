@@ -1,0 +1,33 @@
+pipeline {
+    agent {
+        label 'Build'
+    }
+
+    options {
+        gitLabConnection('NFVGLOBAL_1')
+    }
+  
+    stages {
+        stage('build') {
+            steps {
+                sh 'mvn clean install -Dmaven.test.skip=true'
+            }
+        }
+    }
+
+    post {
+        //always {
+        //    junit 'client/target/surefire-reports/**/*.xml'
+        //}
+        success {
+            echo 'Update success status'
+            updateGitlabCommitStatus(name: 'jenkins', state: 'success')
+            echo 'Done update status'
+        }
+        failure {
+            echo 'Update fail status'
+            updateGitlabCommitStatus(name: 'jenkins', state: 'failed')
+            echo 'Done update status'
+        }
+    }
+}

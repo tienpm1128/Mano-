@@ -1,0 +1,45 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.subscriptions.title' | translate}}</div>
+
+<div class="main-content">
+    <div class="block-title">Threshold Crossed Notification</div>
+    <div class="detail-wrap">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Hypervisor ID:</td>
+                <td>{{hppmSubscription?.filter['nsInstanceSubscriptionFilter']?.nsInstanceIds[0]}}</td>
+            </tr>
+            <tr>
+                <td>Performance Metric:</td>
+                <td>{{hppmSubscription['thresholdDetail']?.criteria?.performanceMetric}}</td>
+            </tr>
+            <tr>
+                <td>Threshold Value:</td>
+                <td>{{hppmSubscription['thresholdDetail']?.criteria?.simpleThresholdDetails?.thresholdValue}}</td>
+            </tr>
+            <tr>
+                <td>Hysteresis:</td>
+                <td>{{hppmSubscription['thresholdDetail']?.criteria?.simpleThresholdDetails?.hysteresis}}</td>
+            </tr>
+        </table>
+        <div class="vnf-wrap">
+            <div class="vnf">
+                <div class="select-chart">
+                    <select [(ngModel)]="chartType">
+                        <option value="line">Line chart</option>
+                        <option value="bar">Bar chart</option>
+                    </select>
+                    <button class="mano-btn" jhiTranslate="entity.action.apply" (click)="changeChartType()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="thresholdChart?.datasets?.length === 0" class="chart-wrap col-lg-8 col-md-12">
+        <p-chart #chart [type]="chartType" [data]="thresholdChart"></p-chart>
+    </div>
+</div>

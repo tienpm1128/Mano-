@@ -1,0 +1,96 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.manoService.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="manoServices"
+         [globalFilterFields]="[
+         'clusterName',
+         'clusterIp',
+         'clusterPort',
+         'instanceName',
+         'defaultState',
+         'microServiceType',
+         'microServiceAddress.amqpAddress?.exchange',
+         'microServiceAddress.amqpAddress?.routingKey',
+         'microServiceAddress.amqpAddress?.queueName',
+         'microServiceAddress.restAddress?.exExternal',
+         'microServiceAddress.restAddress?.ipExternal',
+         'microServiceAddress.restAddress?.port'
+         ]"
+         [paginator]="true"
+         [rows]="10"
+         [pageLinks]="4"
+         [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" style="width: 60px;">#</th>
+                    <th scope="col" [pSortableColumn]="'clusterName'">Cluster Name
+                        <p-sortIcon [field]="'clusterName'"></p-sortIcon>
+                    </th>
+                    <th scope="col" style="width: 10%;" [pSortableColumn]="'clusterIp'">Cluster IP
+                        <p-sortIcon [field]="'clusterIp'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'clusterPort'">Cluster Port
+                        <p-sortIcon [field]="'clusterPort'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'instanceName'">Instance Name
+                        <p-sortIcon [field]="'instanceName'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'defaultState'">Default State
+                        <p-sortIcon [field]="'defaultState'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'microServiceType'">Microservice Type
+                        <p-sortIcon [field]="'microServiceType'"></p-sortIcon>
+                    </th>
+                    <th scope="col">Microservice Address</th>
+                    <th scope="col" [pSortableColumn]="'enabled'">Enabled
+                        <p-sortIcon [field]="'enabled'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'master'">Master
+                        <p-sortIcon [field]="'master'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-i="rowIndex" let-manoService>
+                <tr>
+                    <td>{{i + 1}}</td>
+                    <td>{{manoService?.clusterName}}</td>
+                    <td>{{manoService?.clusterIp}}</td>
+                    <td>{{manoService?.clusterPort}}</td>
+                    <td>{{manoService?.instanceName}}</td>
+                    <td>{{manoService?.defaultState}}</td>
+                    <td>{{manoService?.microServiceType}}</td>
+                    <td >
+                        <div>Exchange: <span>{{manoService?.microServiceAddress?.amqpAddress?.exchange}}</span></div>
+                        <div>Routing Key: <span>{{manoService?.microServiceAddress?.amqpAddress?.routingKey}}</span></div>
+                        <div>Queue Name: <span>{{manoService?.microServiceAddress?.amqpAddress?.queueName}}</span></div>
+                        <div>IP External: <span>{{manoService?.microServiceAddress?.restAddress?.ipExternal}}</span></div>
+                        <div>IP Internal: <span>{{manoService?.microServiceAddress?.restAddress?.ipInternal}}</span></div>
+                        <div>Port: <span>{{manoService?.microServiceAddress?.restAddress?.port}}</span></div>
+                    </td>
+                    <td>
+                        <img *ngIf="manoService?.enabled" src="../../../../content/images/enabled.png" alt="icon"/>
+                        <img *ngIf="!manoService?.enabled" src="../../../../content/images/disabled.png" alt="icon"/>
+                    </td>
+                    <td>
+                        <img *ngIf="manoService?.master" src="../../../../content/images/enabled.png" alt="icon"/>
+                        <img *ngIf="!manoService?.master" src="../../../../content/images/disabled.png" alt="icon"/>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="10">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

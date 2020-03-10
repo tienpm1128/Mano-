@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Aug 16 13:35:56 ICT 2019
+https\://repo.maven.apache.org/maven2/.lastUpdated=1565937356794
+http\://repo.spring.io/milestone/.error=
+http\://repo.spring.io/milestone/.lastUpdated=1565929556406
+=======
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Jul 23 18:28:10 ICT 2019
+https\://repo.maven.apache.org/maven2/.lastUpdated=1563881290799
+http\://repo.spring.io/milestone/.error=
+http\://repo.spring.io/milestone/.lastUpdated=1563881284739
+>>>>>>> parent of e0f802a... update files

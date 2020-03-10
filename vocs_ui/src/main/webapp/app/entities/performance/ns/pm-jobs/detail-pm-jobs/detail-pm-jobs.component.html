@@ -1,0 +1,131 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="detail-wrap">
+        <div class="page-heading">Pm Job - {{pmJobsDetail?.id}}</div>
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>List Ns Instance</td>
+                <td>
+                  <a *ngFor="let objectInstanceId of pmJobsDetail?.objectInstanceIds" [routerLink]="['/nslcm', objectInstanceId]">{{objectInstanceId}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Links</td>
+                <td>{{pmJobsDetail?._links?.self?.href}}</td>
+            </tr>
+        </table>
+        <div class="criteria">
+            <div class="block-title">Criteria</div>
+            <table>
+                <caption></caption>
+                <tr style="display: none;">
+                    <th scope="col"></th>
+                </tr>
+                <tr>
+                    <td>Performance Metric</td>
+                    <td>
+                        <span *ngFor="let metric of pmJobsDetail?.criteria?.performanceMetric; let i = index">{{metric}}<em *ngIf="pmJobsDetail?.criteria?.performanceMetric?.length - 1 > i">,&nbsp;</em></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Performance Metric Group</td>
+                    <td>
+                        <span *ngFor="let metric of pmJobsDetail?.criteria?.performanceMetricGroup; let i = index">{{metric}}<em *ngIf="pmJobsDetail?.criteria?.performanceMetricGroup?.length - 1 > i">,&nbsp;</em></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Collection Period</td>
+                    <td>{{pmJobsDetail?.criteria?.collectionPeriod}} second<ng-container *ngIf="pmJobsDetail?.criteria?.collectionPeriod > 1">s</ng-container></td>
+                </tr>
+                <tr>
+                    <td>Reporting Period</td>
+                    <td>{{pmJobsDetail?.criteria?.reportingPeriod}} second<ng-container *ngIf="pmJobsDetail?.criteria?.reportingPeriod > 1">s</ng-container></td>
+                </tr>
+                <tr>
+                    <td>Reporting Boundary</td>
+                    <td>{{pmJobsDetail?.criteria?.reportingBoundary | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <div class="block-title">Report</div>
+        <div class="search-btn-wrap">
+            <div class="search-box">
+                <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+            </div>
+        </div>
+        <p-table #dt [value]="pmJobsDetail?.reports" (onSort)="onSortOrPage()" (onPage)="onSortOrPage()" [globalFilterFields]="['href', 'fileSize']" [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" [pSortableColumn]="'href'">Uri
+                        <p-sortIcon [field]="'href'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'readyTime'">Ready Time
+                        <p-sortIcon [field]="'readyTime'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'expiryTime'">Expiry Time
+                        <p-sortIcon [field]="'expiryTime'"></p-sortIcon>
+                    </th>
+                    <th scope="col" [pSortableColumn]="'fileSize'">File Size
+                        <p-sortIcon [field]="'fileSize'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-report>
+                <tr>
+                    <td>
+                        <span style="color: #ed2e4f;" (click)="showDialog(report?.id)">{{report?.href}}</span>
+                    </td>
+                    <td>{{report?.readyTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                    <td>{{report?.expiryTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                    <td>{{report?.fileSize}} KB</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" style="text-align: center;">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup" blockScroll="true" appendTo="body" header="PM Report" [(visible)]="isDisplayReport" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'max-width': '80vw'}">
+    <div class="table-wrap">
+        <p-table [value]="reportDetail?.entries" [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col">Object Type</th>
+                    <th scope="col">VNF Instance ID</th>
+                    <th scope="col">Performance Metric</th>
+                    <th scope="col">Performance Value</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-report>
+                <tr>
+                    <td style="text-align: center;">{{report?.objectType}}</td>
+                    <td style="text-align: center;">{{report?.objectInstanceId}}</td>
+                    <td style="text-align: center;">{{report?.performanceMetric}}</td>
+                    <td style="text-align: center;">{{report?.performanceValue?.performanceValue}}</td>
+                    <td style="text-align: center;">{{report?.performanceValue?.timeStamp | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>

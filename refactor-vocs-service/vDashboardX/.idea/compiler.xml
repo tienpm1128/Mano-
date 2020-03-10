@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="fm-resourcemanagement" />
+        <module name="fm-notifications" />
+        <module name="main" />
+        <module name="communication" />
+        <module name="fm-performancemanagement" />
+        <module name="configuration" />
+        <module name="shared" />
+        <module name="fm-authentication" />
+        <module name="fm-othermanagement" />
+        <module name="fm-errormanagement" />
+        <module name="value-objects" />
+        <module name="fm-networkservice" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="communication" options="-parameters" />
+      <module name="configuration" options="-parameters" />
+      <module name="fm-authentication" options="-parameters" />
+      <module name="fm-errormanagement" options="-parameters" />
+      <module name="fm-networkservice" options="-parameters" />
+      <module name="fm-notifications" options="-parameters" />
+      <module name="fm-othermanagement" options="-parameters" />
+      <module name="fm-performancemanagement" options="-parameters" />
+      <module name="fm-resourcemanagement" options="-parameters" />
+      <module name="main" options="-parameters" />
+      <module name="shared" options="-parameters" />
+      <module name="value-objects" options="-parameters" />
+    </option>
+  </component>
+</project>

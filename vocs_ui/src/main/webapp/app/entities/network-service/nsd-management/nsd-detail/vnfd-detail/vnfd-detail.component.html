@@ -1,0 +1,456 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="detail-wrap row">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td>ID</td>
+                    <td>{{vnfdDetail?.vnfdId}}</td>
+                </tr>
+                <tr>
+                    <td>VNF Provider</td>
+                    <td>{{vnfdDetail?.vnfProvider}}</td>
+                </tr>
+                <tr>
+                    <td>VNF Product Name</td>
+                    <td>{{vnfdDetail?.vnfProductName}}</td>
+                </tr>
+                <tr>
+                    <td>VNF Software Version</td>
+                    <td>{{vnfdDetail?.vnfSoftwareVersion}}</td>
+                </tr>
+                <tr>
+                    <td>VNFD Version</td>
+                    <td>{{vnfdDetail?.vnfdVersion}}</td>
+                </tr>
+                <tr>
+                    <td>VNF Product Info Name</td>
+                    <td>{{vnfdDetail?.vnfProductInfoName}}</td>
+                </tr>
+                <tr>
+                    <td>VNF Product Info Description</td>
+                    <td>{{vnfdDetail?.vnfProductInfoDescription}}</td>
+                </tr>
+                <tr>
+                    <td>VNFM Info</td>
+                    <td>
+                        <div *ngFor="let vnfmInfo of vnfdDetail?.vnfmInfo">{{vnfmInfo}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td>Localization Language</td>
+                    <td>
+                        <div *ngFor="let obj of objToString(vnfdDetail?.localizationLanguage)">{{obj[0]}}: {{obj[1]}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Default Localization Language</td>
+                    <td>{{vnfdDetail?.defaultLocalizationLanguage}}</td>
+                </tr>
+                <tr>
+                    <td>Configurable Properties</td>
+                    <td>
+                        <span>
+                            Auto healing
+                            <img [src]="vnfdDetail?.configurableProperties['autohealEnabled'] ? '../../../../../../content/images/enabled.png' : '../../../../../../content/images/disabled.png'" alt="icon"/>
+                        </span>
+                        <span>
+                            Auto scale
+                            <img [src]="vnfdDetail?.configurableProperties['autoscaleEnabled'] ? '../../../../../../content/images/enabled.png' : '../../../../../../content/images/disabled.png'" alt="icon"/>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Modifiable Attributes</td>
+                    <td>
+                        <div *ngFor="let requirement of objToString(vnfdDetail?.modifiableAttributes)">{{requirement[0]}}: {{objToString(requirement[1])[0][1]}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Auto Scale</td>
+                    <td>
+                        <div *ngFor="let obj of objToString(vnfdDetail?.autoScale)">{{obj[0]}}: {{obj[1]}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>VNF Scripts Location</td>
+                    <td>{{vnfdDetail?.vnfScriptsLocation}}</td>
+                </tr>
+                <tr>
+                    <td>Required Outputs</td>
+                    <td>{{vnfdDetail?.requiredOutputs}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-wrap">
+        <p-tabView class="mano-tab-view">
+            <p-tabPanel header="VDU">
+                <p-table [value]="vnfdDetail?.vdu">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Name</th>
+                            <th scope="col"> Description</th>
+                            <th scope="col"> Virtual Compute Desc</th>
+                            <th scope="col"> Virtual Storage Desc</th>
+                            <th scope="col"> Sw Image Desc</th>
+                            <th scope="col"> Boot Order</th>
+                            <th scope="col"> Boot Data</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-vdu>
+                        <tr>
+                            <td>{{vdu['vduId']}}</td>
+                            <td>{{vdu['name']}}</td>
+                            <td>{{vdu['description']}}</td>
+                            <td>{{vdu['virtualComputeDesc']}}</td>
+                            <td>{{vdu['virtualStorageDesc']}}</td>
+                            <td>{{vdu['swImageDesc']}}</td>
+                            <td>
+                                <div *ngFor="let order of objToString(vdu['bootOrder'])">{{order[0]}}: {{order[1]}}</div>
+                            </td>
+                            <td>{{vdu['bootData']}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="8">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Virtual Compute">
+                <p-table [value]="vnfdDetail?.virtualComputeDesc">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Virtual Memory</th>
+                            <th scope="col"> Virtual CPU</th>
+                            <th scope="col"> Virtual Disk</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-compute>
+                        <tr>
+                            <td>{{compute['virtualComputeDescId']}}</td>
+                            <td style="text-align: left;">
+                                <div>Virtual mem size: {{compute['virtualMemory']['virtualMemSize']}}</div>
+                                <div>Virtual mem over subscription polily:
+                                    <div *ngFor="let polily of objToString(compute['virtualMemory']['virtualMemOversubscriptionPolicy'])">{{polily[0]}}: {{polily[1]}}</div>
+                                </div>
+                                <div>Virtual mem requirements:
+                                    <div *ngFor="let polily of objToString(compute['virtualMemory']['vduMemRequirements'])">{{polily[0]}}: {{polily[1]}}</div>
+                                </div>
+                                <div>Numa enabled: {{compute['virtualMemory']['numaEnabled']}}</div>
+                            </td>
+                            <td style="text-align: left;">
+                                <div>CPU architecture: {{compute['virtualCpu']['cpuArchitecture']}}</div>
+                                <div>Num virtual CPU: {{compute['virtualCpu']['numVirtualCpu']}}</div>
+                                <div>Virtual CPU clock: {{compute['virtualCpu']['virtualCpuClock']}}</div>
+                                <div>Virtual CPU over subscription policy: {{compute['virtualCpu']['virtualCpuOversubscriptionPolicy']}}</div>
+                                <div>VDU CPU requirements:
+                                    <div *ngFor="let requirement of objToString(compute['virtualCpu']['vduCpuRequirements'])">{{requirement[0]}}: {{requirement[1]}}</div>
+                                </div>
+                            </td>
+                            <td style="text-align: left;">
+                                <div>Size of storage: {{compute['virtualDisk'][0]['sizeOfStorage']}}</div>
+                                <div>VDU storage requirements:
+                                    <div *ngFor="let requirement of objToString(compute['virtualDisk'][0]['vduStorageRequirements'])">{{requirement[0]}}: {{requirement[1]}}</div>
+                                </div>
+                                <div>Rdm a enabled: {{compute['virtualDisk'][0]['rdmaEnabled']}}</div>
+                                <div>Software image description: {{compute['virtualDisk'][0]['swImageDesc']}}</div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="4">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Virtual Storage">
+                <p-table [value]="vnfdDetail?.virtualStorageDesc">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Type Of Storage</th>
+                            <th scope="col"> Block Storage Data</th>
+                            <th scope="col"> Object Storage Data</th>
+                            <th scope="col"> File Storage Data</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-storage>
+                        <tr>
+                            <td>{{storage['id']}}</td>
+                            <td>{{storage['typeOfStorage']}}</td>
+                            <td style="text-align: left;">
+                                <div *ngFor="let requirement of objToString(storage['blockStorageData'])">{{requirement[0]}}: {{requirement[1]}}</div>
+                            </td>
+                            <td style="text-align: left;">
+                                <div *ngFor="let requirement of objToString(storage['objectStorageData'])">{{requirement[0]}}: {{requirement[1]}}</div>
+                            </td>
+                            <td style="text-align: left;">
+                                <div *ngFor="let requirement of objToString(storage['fileStorageData'])">{{requirement[0]}}: {{requirement[1]}}</div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="5">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Software Image">
+                <p-table [value]="vnfdDetail?.swImageDesc">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Name</th>
+                            <th scope="col"> Version</th>
+                            <th scope="col"> Container Format</th>
+                            <th scope="col"> Disk Format</th>
+                            <th scope="col"> Min Disk</th>
+                            <th scope="col"> Min Ram</th>
+                            <th scope="col"> Size</th>
+                            <th scope="col"> Software Image</th>
+                            <th scope="col"> Operation Image</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-link>
+                        <tr>
+                            <td>{{link['id']}}</td>
+                            <td>{{link['name']}}</td>
+                            <td>{{link['version']}}</td>
+                            <td>{{link['containerFormat']}}</td>
+                            <td>{{link['diskFormat']}}</td>
+                            <td>{{link['minDisk']}}</td>
+                            <td>{{link['minRam']}}</td>
+                            <td>{{link['size']}}</td>
+                            <td>{{link['swImage']}}</td>
+                            <td>{{link['operatingSystem']}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="10">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Virtual Link">
+                <p-table [value]="vnfdDetail?.intVirtualLinkDesc">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Virtual Link Description Flavour</th>
+                            <th scope="col"> Connectivity Type</th>
+                            <th scope="col"> Description</th>
+                            <th scope="col"> Monitor Parameter</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-link>
+                        <tr>
+                            <td>{{link['virtualLinkDescId']}}</td>
+                            <td>
+                                <div *ngFor="let desc of link?.virtualLinkDescFlavour">{{desc?.flavourId}}</div>
+                            </td>
+                            <td>
+                                <div *ngFor="let type of link?.connectivityType?.layerProtocol">{{type}}</div>
+                            </td>
+                            <td>{{link['description']}}</td>
+                            <td>
+                                <div *ngFor="let monitoring of link?.monitoringParameter">{{monitoring?.name}}</div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="5">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Security Group Rule">
+                <p-table [value]="vnfdDetail?.securityGroupRule">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Description</th>
+                            <th scope="col"> Direction</th>
+                            <th scope="col"> Ether Size</th>
+                            <th scope="col"> Protocol</th>
+                            <th scope="col"> Port Range Min</th>
+                            <th scope="col"> Port Range Max</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-security>
+                        <tr>
+                            <td>{{security['securityGroupRuleId']}}</td>
+                            <td>{{security['description']}}</td>
+                            <td>{{security['direction']}}</td>
+                            <td>{{security['etherType']}}</td>
+                            <td>{{security['protocol']}}</td>
+                            <td>{{security['portRangeMin']}}</td>
+                            <td>{{security['portRangeMax']}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="7">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="VNF Ext CPD">
+                <p-table [value]="vnfdDetail?.vnfExtCpd">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Layer Protocol</th>
+                            <th scope="col"> Role</th>
+                            <th scope="col"> Description</th>
+                            <th scope="col"> Trunk Mode</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-vnfExtCpd>
+                        <tr>
+                            <td>{{vnfExtCpd['cpdId']}}</td>
+                            <td>
+                                <span *ngFor="let ip of vnfExtCpd['layerProtocol']; let i = index">{{ip}}<em *ngIf="i !== vnfExtCpd['layerProtocol'].length - 1">,&nbsp;</em></span>
+                            </td>
+                            <td>{{vnfExtCpd['cpRole']}}</td>
+                            <td>{{vnfExtCpd['description']}}</td>
+                            <td>{{vnfExtCpd['trunkMode']}}</td>
+                        </tr>
+                    </ng-template><ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="5">
+                            {{'table.emptyMessage' | translate}}
+                        </td>
+                    </tr>
+                </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Deploy Flavour">
+                <p-table [value]="vnfdDetail?.deploymentFlavour">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Description</th>
+                            <th scope="col"> VDU Profile</th>
+                            <th scope="col"> Virtual Link Profile</th>
+                            <th scope="col"> Instantiation Level</th>
+                            <th scope="col"> Supported Operation</th>
+                            <th scope="col"> VNF Indicator</th>
+                            <th scope="col"> Scale Aspect</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-deployment>
+                        <tr>
+                            <td>{{deployment['flavourId']}}</td>
+                            <td>{{deployment['description']}}</td>
+                            <td>{{deployment['vduProfile']}}</td>
+                            <td>{{deployment['virtualLinkProfile']}}</td>
+                            <td>{{deployment['instantiationLevel']}}</td>
+                            <td>{{deployment['supportedOperation']}}</td>
+                            <td>{{deployment['vnfIndicator']}}</td>
+                            <td>{{deployment['scalingAspect']}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="8">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Lifecycle Script">
+                <p-table [value]="vnfdDetail?.lifeCycleManagementScript">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> Event</th>
+                            <th scope="col"> LCM Transition Event</th>
+                            <th scope="col"> Script Directory</th>
+                            <th scope="col"> Script DSL</th>
+                            <th scope="col"> Script Input</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-script>
+                        <tr>
+                            <td>{{script['event']}}</td>
+                            <td>{{script['lcmTransitionEvent']}}</td>
+                            <td>{{script['scriptDirectory']}}</td>
+                            <td>{{script['scriptDsl']}}</td>
+                            <td>
+                                <div *ngFor="let input of objToString(script['scriptInput'])">{{input[0]}}: {{input[1]}}</div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="5">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="VNF Indicator">
+                <p-table [value]="vnfdDetail?.vnfIndicator">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"> ID</th>
+                            <th scope="col"> Name</th>
+                            <th scope="col"> Value</th>
+                            <th scope="col"> Source</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-vnfIndicator>
+                        <tr>
+                            <td>{{vnfIndicator['id']}}</td>
+                            <td>{{vnfIndicator['name']}}</td>
+                            <td>{{vnfIndicator['indicatorValue']}}</td>
+                            <td>{{vnfIndicator['source']}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="4">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

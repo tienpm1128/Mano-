@@ -1,0 +1,10 @@
+<div class="breadcrumb-wrap">
+    <ul class="breadcrumb-items page-wrap">
+        <li *ngFor="let breadcrumb of breadcrumbs; let i = index" class="breadcrumb-item">
+            <a *ngIf="i !== breadcrumbs.length - 1 && verifyBreadcrumb(breadcrumb.label)" [routerLink]="breadcrumb.url" [translate]="breadcrumb.label"></a>
+            <a *ngIf="i !== breadcrumbs.length - 1 && !verifyBreadcrumb(breadcrumb.label)" [routerLink]="breadcrumb.url">{{breadcrumb.label}}</a>
+            <span *ngIf="i === breadcrumbs.length - 1 && verifyBreadcrumb(breadcrumb.label)" [translate]="breadcrumb.label"></span>
+            <span *ngIf="i === breadcrumbs.length - 1 && !verifyBreadcrumb(breadcrumb.label)">{{breadcrumb.label}}</span>
+        </li>
+    </ul>
+</div>

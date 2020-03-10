@@ -1,0 +1,63 @@
+@import '../../../content/scss/vars';
+
+.main-content {
+  .table-wrap {
+    ::ng-deep table {
+      tr {
+        td {
+          border: 1px solid $border-color;
+
+          &:nth-of-type(3) {
+            a {
+              color: $base-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  table {
+    margin: auto;
+
+    tr {
+      td {
+        padding: 8px 10px;
+      }
+    }
+  }
+}
+
+img {
+  height: 15px;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  .search-btn-wrap {
+    flex-wrap: wrap;
+
+    .search-box {
+      width: 100%;
+      margin-bottom: 15px;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .btns {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+
+      .mano-btn {
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

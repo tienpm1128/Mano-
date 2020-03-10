@@ -1,0 +1,198 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.software.title' | translate}}
+</div>
+
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="softWares" selectionMode="single" alwaysShowPaginator="true"
+            [(selection)]="softWareDetail" [globalFilterFields]="['fileName', 'version','fileType','size']"
+            [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col">{{'mano.software.title' | translate}}</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" class="text-right">
+                        <button class="mano-btn-table-head" *ngIf="isAdmin" [disabled]="isCreateBtnHidden"
+                            (click)="isDisplayCreate = true">Add New</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-softWare>
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        <span style="color: #ed2e4f;"
+                            (click)="showSoftwareDetail(softWare.id)">{{softWare.fileName}}</span>
+                    </td>
+                    <td>{{softWare.version}}</td>
+                    <td>{{softWare.fileType}}</td>
+                    <td>{{softWare.size}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="4" style="color: #111;">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup create-software-dialog" blockScroll="true" appendTo="body"
+    header="Create Software" [(visible)]="isDisplayCreate" [responsive]="true" showEffect="fade" [modal]="true"
+    (onHide)="softwareForm.reset()" (onShow)="showNewSoftwareDlg(softwareForm, uploadFile);"
+    [style]="{'max-width': '80vw', width: '800px'}">
+    <form name="softwareForm" class="software-form" novalidate (ngSubmit)="submit()" #softwareForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>File Software*</td>
+                <td>
+                    <input (blur)="newSoftWare.fileName = newSoftWare?.fileName?.trim()" type="text" name="fileName"
+                        #fileName="ngModel" class="uploaded-file-name" [(ngModel)]="newSoftWare.fileName" readonly
+                        required>
+                    <div class="choose-file">
+                        <button class="mano-btn">Browser</button>
+                        <input type="file" name="uploadFile" [value]="chooseNameFile" (change)="onFileSelect($event)"
+                            #uploadFile required />
+                    </div>
+                    <div *ngIf="uploadFile['invalid'] && (uploadFile['dirty'] || uploadFile['touched']) || hasErrorFileSize"
+                        class="mess_valid">
+                        <small>
+                            The maximum file size allowed is 200MB.
+                        </small>
+                    </div>
+                    <div *ngIf="fileName.errors?.required && fileName.touched" class="mess_valid">
+                        File Software is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Version*</td>
+                <td>
+                    <input type="text" (blur)="newSoftWare.version = newSoftWare?.version?.trim()" name="version"
+                        [(ngModel)]="newSoftWare.version" maxlength="20" #version="ngModel" required>
+                    <div *ngIf="version.invalid || (version.dirty || version.touched) && !isResetForm"
+                        class="mess_valid">
+                        <div *ngIf="version.errors?.maxlength">
+                            Version must be a maximum of 20 characters.
+                        </div>
+                        <div *ngIf="version.errors?.required && version.touched" class="mess_valid">
+                            Version is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Installed Folder Path*</td>
+                <td>
+                    <input type="text"
+                        (blur)="newSoftWare.installedFolderPath = newSoftWare?.installedFolderPath?.trim()"
+                        name="installedFolderPath" [(ngModel)]="newSoftWare.installedFolderPath" maxlength="100"
+                        #installedFolderPath="ngModel" required>
+                    <div *ngIf="installedFolderPath.invalid || (installedFolderPath.dirty || installedFolderPath.touched) && !isResetForm"
+                        class="mess_valid">
+                        <div *ngIf="installedFolderPath.errors?.maxlength">
+                            Path must be a maximum of 100 characters.
+                        </div>
+                        <div *ngIf="installedFolderPath.errors?.required && installedFolderPath.touched"
+                            class="mess_valid">
+                            Path is required
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Add Command Executor</td>
+                <td>
+                    <button class="mano-btn add-btn" type="button" (click)="addCommandExecutor()">
+                        <img src="../../../../../content/images/simple-add.png" alt="icon" />
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class="cmdExecutorItems">
+                        <div *ngFor="let item of newSoftWare?.cmdExecutors; let i = index; trackBy:trackByFn">
+                            <div class="command-group">
+                                <textarea cols="30" rows="2"
+                                    (change)="newSoftWare.cmdExecutors[i] = newSoftWare.cmdExecutors[i].trim()"
+                                    (ngModelChange)="onCommandExeChange($event, i)"
+                                    [(ngModel)]="newSoftWare.cmdExecutors[i]" [name]="'cmdExecutor'+i"
+                                    maxlength="250"></textarea>
+                                <span class="table-action" (click)="removeCommandExecutor(i)">
+                                    <img class="trash-command" src="../../../../../content/images/trash.png"
+                                        alt="icon" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button [disabled]="softwareForm.form.invalid || hasErrorFileSize || isInvalidCommandExe" class="mano-btn"
+                type="submit">Save</button>
+            <button class="sub-btn mano-btn" type="reset" (click)="resetForm()">Reset</button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog styleClass="popup-detail vocs-popup" appendTo="body" blockScroll="true" header="Detail Software"
+    [(visible)]="isDisplayDetail" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'max-width': '800px'}">
+    <table>
+        <caption></caption>
+        <tr style="display: none;">
+            <th scope="col"></th>
+        </tr>
+        <tr>
+            <td style="text-align: left;">ID</td>
+            <td>{{softWareDetail?.id}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">File Name</td>
+            <td>{{softWareDetail?.fileName}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Version</td>
+            <td>{{softWareDetail?.version}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">File Type</td>
+            <td>{{softWareDetail?.fileType}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Size</td>
+            <td>{{softWareDetail?.size}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">File Download URI</td>
+            <td>{{softWareDetail?.fileDownloadUri}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Installed Folder Path</td>
+            <td>{{softWareDetail?.installedFolderPath}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Command Executor</td>
+            <td>
+                <div *ngFor="let cmd of softWareDetail?.cmdExecutors">
+                    {{cmd}}
+                </div>
+            </td>
+        </tr>
+    </table>
+</p-dialog>

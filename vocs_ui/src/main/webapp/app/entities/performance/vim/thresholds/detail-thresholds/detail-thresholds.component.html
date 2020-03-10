@@ -1,0 +1,53 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="detail-wrap">
+        <div class="block-title">Threshold - {{thresholdsDetail?.id}}</div>
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Hypervisor ID</td>
+                <td>{{thresholdsDetail?.objectInstanceId}}</td>
+            </tr>
+            <tr>
+                <td>Links</td>
+                <td>
+                    <a [href]="thresholdsDetail?._links?.self?.href">{{thresholdsDetail?._links?.self?.href}}</a>
+                </td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-left col-lg-6 col-md-12">
+                <div class="col-wrap">
+                    <div class="block-title">Criteria</div>
+                    <table>
+                        <caption></caption>
+                        <tr style="display: none;">
+                            <th scope="col"></th>
+                        </tr>
+                        <tr>
+                            <td>Performance Metric</td>
+                            <td>
+                                {{thresholdsDetail?.criteria?.performanceMetric}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Threshold Type</td>
+                            <td>{{thresholdsDetail?.criteria?.thresholdType}}</td>
+                        </tr>
+                        <tr>
+                            <td>Threshold Value</td>
+                            <td>{{thresholdsDetail?.criteria?.simpleThresholdDetails?.thresholdValue }}</td>
+                        </tr>
+                        <tr>
+                            <td>Hysteresis</td>
+                            <td>{{thresholdsDetail?.criteria?.simpleThresholdDetails?.hysteresis }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

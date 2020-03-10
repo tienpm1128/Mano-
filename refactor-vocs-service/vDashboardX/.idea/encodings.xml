@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/communication" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/configuration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-authentication" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-errormanagement" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-networkservice" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-notifications" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-othermanagement" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-performancemanagement" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fm-resourcemanagement" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/main" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shared" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/value-objects" charset="UTF-8" />
+  </component>
+</project>

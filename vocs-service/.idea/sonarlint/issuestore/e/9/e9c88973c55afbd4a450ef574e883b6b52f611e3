@@ -1,0 +1,55 @@
+
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Š×…Ù
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Ûıìúÿÿÿÿ
+osquid:ModifiersOrderCheck+"EReorder the modifiers to comply with the Java Language Specification.(ïÏæ­ÿÿÿÿÿ
+osquid:ModifiersOrderCheck/"EReorder the modifiers to comply with the Java Language Specification.(«õ†¼üÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(§¸É¬
+isquid:ModifiersOrderCheck""EReorder the modifiers to comply with the Java Language Specification.(­é,
+jsquid:ModifiersOrderCheck#"EReorder the modifiers to comply with the Java Language Specification.(¯¦Šå
+osquid:ModifiersOrderCheck2"EReorder the modifiers to comply with the Java Language Specification.(Î™€Ïşÿÿÿÿ
+osquid:ModifiersOrderCheck	"EReorder the modifiers to comply with the Java Language Specification.(Ë›öşÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(ß¢‰¸
+osquid:ModifiersOrderCheck*"EReorder the modifiers to comply with the Java Language Specification.(¹ÿòÈıÿÿÿÿ
+osquid:ModifiersOrderCheck5"EReorder the modifiers to comply with the Java Language Specification.(ÃŠ÷…ıÿÿÿÿ
+osquid:ModifiersOrderCheck("EReorder the modifiers to comply with the Java Language Specification.(Çëø°ùÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(«Ä‹Ù
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(±öıñüÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(ºã•¡
+osquid:ModifiersOrderCheck4"EReorder the modifiers to comply with the Java Language Specification.(°şî¤ıÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Ä«ú’
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(ÇŒÊúÿÿÿÿ
+osquid:ModifiersOrderCheck8"EReorder the modifiers to comply with the Java Language Specification.(èïİşÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(úß„ıÿÿÿÿ
+jsquid:ModifiersOrderCheck
+"EReorder the modifiers to comply with the Java Language Specification.(¢Ÿ—º
+Vsquid:S1118":Add a private constructor to hide the implicit public one.(“³±ûÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(¦®ôÛùÿÿÿÿ
+osquid:ModifiersOrderCheck%"EReorder the modifiers to comply with the Java Language Specification.(»Éú ÿÿÿÿÿ
+jsquid:ModifiersOrderCheck)"EReorder the modifiers to comply with the Java Language Specification.(ÁØ“¡
+osquid:ModifiersOrderCheck-"EReorder the modifiers to comply with the Java Language Specification.(ªÓÂ©şÿÿÿÿ
+jsquid:ModifiersOrderCheck."EReorder the modifiers to comply with the Java Language Specification.(±§ı°
+osquid:ModifiersOrderCheck1"EReorder the modifiers to comply with the Java Language Specification.(œ®Úšşÿÿÿÿ
+jsquid:ModifiersOrderCheck!"EReorder the modifiers to comply with the Java Language Specification.(ÈÉÃ
+Œ"squid:ClassVariableVisibilityCheck"YMake SESSION_TOKEN a static final constant or non-public and provide accessors if needed.(Õìä‘øÿÿÿÿ
+osquid:ModifiersOrderCheck$"EReorder the modifiers to comply with the Java Language Specification.(ùîÒ˜øÿÿÿÿ
+osquid:ModifiersOrderCheck&"EReorder the modifiers to comply with the Java Language Specification.(õ¤ã˜ıÿÿÿÿ
+osquid:ModifiersOrderCheck0"EReorder the modifiers to comply with the Java Language Specification.(Óƒ½Àøÿÿÿÿ
+osquid:ModifiersOrderCheck3"EReorder the modifiers to comply with the Java Language Specification.(¶å½ÿÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Ã¿ôÜûÿÿÿÿ
+‰squid:S1319D"mThe return type of this method should be an interface such as "Map" rather than the implementation "HashMap".(õ…››úÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(È›¾
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(¸‹ô†şÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Æ…×Ç
+osquid:ModifiersOrderCheck,"EReorder the modifiers to comply with the Java Language Specification.(ŞîŠµÿÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(¿‚»Õùÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(øÿíøıÿÿÿÿ
+Osquid:S1444"3Make this "public static SESSION_TOKEN" field final(Õìä‘øÿÿÿÿ
+jsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Û–
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(­¤é¥ÿÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(œ–âÌúÿÿÿÿ
+osquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(Õìä‘øÿÿÿÿ
+jsquid:ModifiersOrderCheck'"EReorder the modifiers to comply with the Java Language Specification.(Êá»Ÿ
+usquid:S2293:"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ö å¡úÿÿÿÿ
+’squid:S1319H"vThe type of the "keyParamHeader" object should be an interface such as "Map" rather than the implementation "HashMap".(ğå€ìşÿÿÿÿ
+tsquid:S3008"XRename this field "SESSION_TOKEN" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õìä‘øÿÿÿÿ
+jsquid:ModifiersOrderCheck "EReorder the modifiers to comply with the Java Language Specification.(›œ©Â

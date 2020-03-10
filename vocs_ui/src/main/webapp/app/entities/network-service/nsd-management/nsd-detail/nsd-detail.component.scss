@@ -1,0 +1,22 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  .table-wrap {
+    ::ng-deep table {
+      tbody {
+        tr {
+          td {
+            span {
+              &:first-of-type {
+                color: $base-color;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

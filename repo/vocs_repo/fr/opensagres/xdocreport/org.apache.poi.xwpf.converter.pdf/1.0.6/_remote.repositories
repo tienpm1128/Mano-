@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jun 27 16:38:14 ICT 2019
+org.apache.poi.xwpf.converter.pdf-1.0.6.pom>central=
+org.apache.poi.xwpf.converter.pdf-1.0.6-sources.jar>central=
+org.apache.poi.xwpf.converter.pdf-1.0.6.jar>central=

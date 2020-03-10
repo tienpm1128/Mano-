@@ -1,0 +1,107 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <h1 class="page-heading">Alarm - {{alarmDetail?.faultType}}</h1>
+    <div class="detail-wrap">
+        <div class="table-wrap">
+            <table>
+                <caption></caption>
+                <tr style="display: none;">
+                    <th scope="col"></th>
+                </tr>
+                <tr>
+                    <td>Event Type</td>
+                    <td>{{alarmDetail?.eventType}}</td>
+                </tr>
+                <tr>
+                    <td>Perceived Severity</td>
+                    <td [style.color] = "getColor(alarmDetail?.perceivedSeverity)">
+                        <img *ngIf="alarmDetail?.perceivedSeverity === 'CRITICAL'" src="../../../../../content/images/Critical.png" alt="icon"/>
+                        <img *ngIf="alarmDetail?.perceivedSeverity === 'MAJOR'" src="../../../../../content/images/Major.png" alt="icon"/>
+                        {{alarmDetail?.perceivedSeverity}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Object Instance ID</td>
+                    <td>{{alarmDetail?.objectInstanceId}}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e5e5;">
+                    <td>Sub Object Instance ID</td>
+                    <td>{{alarmDetail?.subObjectInstanceId}}</td>
+                </tr>
+                <tr>
+                    <td>Ack State</td>
+                    <td>
+                        <img *ngIf="alarmDetail?.ackState === 'ACKNOWLEDGED'" src="../../../../../content/images/enabled.png" alt="icon"/>
+                        <img *ngIf="alarmDetail?.ackState === 'UNACKNOWLEDGED'" src="../../../../../content/images/disabled.png" alt="icon"/>
+                        <span *ngIf="alarmDetail?.ackState === 'UNACKNOWLEDGED' && isAdmin" class="table-action" (click)="confirmEdit(alarmDetail.id)">
+                            <img src="../../../../../content/images/edit.png" alt="icon"/>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Alarm Raised Time</td>
+                    <td>{{alarmDetail?.alarmRaisedTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+                <tr>
+                    <td>Alarm Changed Time</td>
+                    <td>{{alarmDetail?.alarmChangedTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+                <tr>
+                    <td>Alarm Cleared Time</td>
+                    <td>{{alarmDetail?.alarmClearedTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+                <tr>
+                    <td>Event Time</td>
+                    <td>{{alarmDetail?.eventTime | date: 'HH:mm:ss dd/MM/yyyy'}}</td>
+                </tr>
+            </table>
+            <table> <!-- Noncompliant -->
+                <caption></caption>
+                <tr style="display: none;">
+                    <th scope="col"></th>
+                </tr>
+                <tr>
+                    <td>Server Name</td>
+                    <td>{{alarmDetail?.subObjectInstanceName}}</td>
+                </tr>
+                <tr>
+                    <td>Server IP</td>
+                    <td>{{alarmDetail?.subObjectInstanceIp}}</td>
+                </tr>
+                <tr>
+                    <td>Manage Object Type</td>
+                    <td>{{alarmDetail?.managedObjectType}}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e5e5;">
+                    <td>Manage Sub Object Type</td>
+                    <td>{{alarmDetail?.managedObjectTargetType}}</td>
+                </tr>
+                <tr>
+                    <td>Probable Cause</td>
+                    <td>{{alarmDetail?.probableCause}}</td>
+                </tr>
+                <tr>
+                    <td>Is Root Cause</td>
+                    <td>
+                        <img *ngIf="alarmDetail?.isRootCause === true" src="../../../../../content/images/enabled.png"  alt="icon"/>
+                        <img *ngIf="alarmDetail?.isRootCause === false" src="../../../../../content/images/disabled.png" alt="icon"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Correlated Alarm IDs</td>
+                    <td>{{alarmDetail?.correlatedAlarmIds}}</td>
+                </tr>
+                <tr>
+                    <td>Links</td>
+                    <td>{{alarmDetail?._links}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="detail">
+            <div class="page-heading">Fault Details</div>
+            <p>
+                <span *ngFor="let detail of alarmDetail?.faultDetails; let i = index">{{detail}}<em *ngIf="i !== alarmDetail?.faultDetails?.length - 1">,&nbsp;</em></span>
+            </p>
+        </div>
+    </div>
+</div>

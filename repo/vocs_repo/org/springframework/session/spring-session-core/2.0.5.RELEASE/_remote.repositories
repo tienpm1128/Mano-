@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Sep 03 16:08:40 ICT 2019
+spring-session-core-2.0.5.RELEASE.pom>repository.spring.milestone=
+spring-session-core-2.0.5.RELEASE.jar>repository.spring.milestone=
+spring-session-core-2.0.5.RELEASE-sources.jar>repository.spring.milestone=

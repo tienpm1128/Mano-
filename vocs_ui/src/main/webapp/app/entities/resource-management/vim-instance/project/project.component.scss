@@ -1,0 +1,172 @@
+@import '../../../../../content/scss/vars';
+
+.table-wrap {
+  p-table {
+    ::ng-deep table {
+      tr {
+        td {
+          > img {
+            width: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  .ui-dialog-content {
+    form {
+      table {
+        margin: auto;
+      }
+
+      .pick-list-wrap {
+        padding-top: 25px;
+        margin-top: 25px;
+        border-top: 1px solid $border-color;
+
+        .col-heading {
+          font-weight: $bold;
+          margin-bottom: 8px;
+        }
+
+        .list-user {
+          background-color: $background-color;
+
+          p-orderList {
+            ::ng-deep .ui-widget {
+              .ui-orderlist-list-container {
+                width: 100%;
+
+                .ui-widget-content {
+                  padding: 0 !important;
+
+                  .ui-orderlist-item {
+                    padding: 0;
+                    margin: 0;
+                    transition: 0.3s;
+
+                    .user {
+                      padding: 7px 15px;
+                    }
+
+                    &.ui-state-highlight {
+                      background-color: $base-color;
+
+                      .user {
+                        color: $slave-color;
+                      }
+
+                      .role {
+                        .mess_valid {
+                          color: $slave-color;
+                        }
+                      }
+                    }
+                  }
+
+                  .ui-orderlist-droppoint {
+                    display: none;
+                  }
+                }
+              }
+
+              .ui-orderlist-controls {
+                display: none;
+                position: absolute;
+                bottom: 0;
+                width: auto;
+                padding: 0;
+                left: calc(100% - 11px);
+
+                button {
+                  background-color: #555;
+                  border-radius: 4px;
+                  border: none;
+                  width: 24px;
+                  height: 24px;
+
+                  span {
+                    font-weight: $bold;
+                    color: $slave-color;
+                  }
+
+                  &[icon='pi pi-angle-double-up'],
+                  &[icon='pi pi-angle-double-down'] {
+                    display: none;
+                  }
+
+                  &[icon='pi pi-angle-down'] {
+                    margin-bottom: 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .col-left {
+          .list-user {
+            p-orderList {
+              ::ng-deep .ui-orderlist {
+                .ui-orderlist-controls {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+
+        .col-mid {
+          display: flex;
+          flex-direction: column;
+          padding-top: 30px;
+          justify-content: space-between;
+
+          .move,
+          .move-all {
+            display: flex;
+            flex-direction: column;
+
+            .move-btn {
+              margin-bottom: 8px;
+
+              &:last-of-type {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
+
+        .col-right {
+          p-orderList {
+            ::ng-deep .ui-widget {
+              .ui-orderlist-list-container {
+                .ui-widget-content {
+                  .ui-orderlist-item {
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 7px 15px;
+
+                    .user {
+                      margin-right: 5px;
+                      padding: 0;
+                    }
+
+                    .role {
+                      select {
+                        min-width: auto;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

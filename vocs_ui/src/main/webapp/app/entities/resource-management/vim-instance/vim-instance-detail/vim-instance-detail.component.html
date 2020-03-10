@@ -1,0 +1,337 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.vimInstances.title' | translate}}</div>
+
+<div class="main-content">
+    <div class="inner-nav">
+        <span class="inner-heading">OCS Datacenter</span>
+        <div class="inner-toolbar">
+            <span>User: {{vimUser['username']}}</span>
+            <span class="mano-btn" *ngIf="isAdmin" (click)="isDisplayGrantVimRole = true">Grant Vim Role</span>
+            <span class="sub-btn mano-btn" (click)="logoutVim()">Logout</span>
+        </div>
+    </div>
+    <div class="data-tables">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>ID</td>
+                <td>{{vimInstance?.id}}</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{vimInstance?.name}}</td>
+            </tr>
+            <tr>
+                <td>Domain</td>
+                <td>{{vimInstance?.domain}}</td>
+            </tr>
+        </table>
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>{{vimInstance?.location?.name}}</td>
+            </tr>
+            <tr>
+                <td>Version</td>
+                <td>{{vimInstance?.version}}</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td>{{vimInstance?.active ? 'ACTIVE' : 'INACTIVE'}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="main-content row">
+    <div *ngIf="isAdmin" class="col-chart row col-lg-6 col-md-12">
+        <div class="col-content col-lg-4 col-xs-12">
+            <div class="chart-label">
+                <span>vCPU</span>
+                <span>{{usedvCPU/totalvCPU*100 | number: '1.0-0'}}%</span>
+            </div>
+            <p-chart #chart type="doughnut" height="300px" [data]="vCpuChart" [options]="chartOptions"></p-chart>
+        </div>
+        <div class="col-content col-lg-4 col-xs-12">
+            <div class="chart-label">
+                <span>Memory</span>
+                <span>{{usedMemory/totalMemory*100 | number: '1.0-0'}}%</span>
+            </div>
+            <p-chart type="doughnut" height="300px" [data]="memoryChart" [options]="chartOptions"></p-chart>
+        </div>
+        <div class="col-content col-lg-4 col-xs-12">
+            <div class="chart-label">
+                <span>Local Disk</span>
+                <span>{{usedLocalDisk/totalLocalDisk*100 | number: '1.0-0'}}%</span>
+            </div>
+            <p-chart type="doughnut" height="300px" [data]="localDiskChart" [options]="chartOptions"></p-chart>
+        </div>
+    </div>
+    <div class="col-table {{isAdmin ? 'col-lg-6 col-md-12' : ''}}">
+        <div class="table-wrap">
+            <p-table [value]="resourceQuota" [paginator]="true" [rows]="10" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th scope="col" [pSortableColumn]="'username'">User
+                            <p-sortIcon [field]="'username'"></p-sortIcon>
+                        </th>
+                        <th scope="col" class="text-center">CPU</th>
+                        <th scope="col">Memory</th>
+                        <th scope="col">Storage</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-quota>
+                    <tr>
+                        <td>{{quota['username']}}</td>
+                        <td>{{quota['virtualUsedCPU']}}/{{quota['virtualCPU']}}</td>
+                        <td>{{quota['localMemoryUsed']}}/{{quota['localMemory']}}</td>
+                        <td>{{quota['localDiskUsed']}}/{{quota['localDisk']}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="4">
+                            {{'table.emptyMessage' | translate}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <p-tabView class="mano-tab-view">
+        <p-tabPanel [header]="project.projectName" *ngFor="let project of vimProjects; let i = index" [selected]="i === 0">
+            <div class="inner-heading">Hypervisor</div>
+            <div class="hypervisor-wrap">
+                <div class="chart-wrap">
+                    <div class="chart">
+                        <p-chart type="doughnut" width="110px" height="110px" [data]="project['vCpuConfig']" [options]="tabOptions"></p-chart>
+                        <div class="chart-name">vCPU</div>
+                    </div>
+                    <div class="chart">
+                        <p-chart type="doughnut" width="110px" height="110px" [data]="project['memoryConfig']" [options]="tabOptions"></p-chart>
+                        <div class="chart-name">Memory</div>
+                    </div>
+                    <div class="chart">
+                        <p-chart type="doughnut" width="110px" height="110px" [data]="project['localDiskConfig']" [options]="tabOptions"></p-chart>
+                        <div class="chart-name">Local Disk</div>
+                    </div>
+                    <div class="vm-count chart">
+                        <div class="count-number">{{project['runningVM']}}</div>
+                        <div class="chart-name">Number VM</div>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <p-table [value]="project['hypervisors']" [paginator]="true" [pageLinks]="4" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th scope="col" [pSortableColumn]="'hypervisorName'">Host Name
+                                    <p-sortIcon [field]="'hypervisorName'"></p-sortIcon>
+                                </th>
+                                <th scope="col" class="text-center">vCPU</th>
+                                <th scope="col" >RAM</th>
+                                <th scope="col" >Local Disk</th>
+                                <th scope="col" [pSortableColumn]="'runningVM'">Instances
+                                    <p-sortIcon [field]="'runningVM'"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-hypervisor>
+                            <tr>
+                                <td>{{hypervisor['hypervisorName']}}</td>
+                                <td>{{hypervisor['virtualUsedCPU']}}/{{hypervisor['virtualCPU']}}</td>
+                                <td>{{hypervisor['localMemoryUsed']}}/{{hypervisor['localMemory']}}</td>
+                                <td>{{hypervisor['localDiskUsed']}}/{{hypervisor['localDisk']}}</td>
+                                <td>{{hypervisor['runningVM']}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td [attr.colspan]="5">
+                                    {{'table.emptyMessage' | translate}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<div class="metric-wrap row">
+    <div class="col-quota col-lg-4 col-xs-12">
+        <div class="analysis main-content">
+            <div class="inner-heading">Compute Quota</div>
+            <div class="chart-wrap row">
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="computeVCpu" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Virtual CPU</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="computeVM" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Virtual Machine</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="computeRam" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">RAM</div>
+                </div>
+            </div>
+            <div class="inner-heading">Network Quota</div>
+            <div class="chart-wrap row">
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="networkIP" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Public IPs</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="networkPort" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Ports</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="networkSubnet" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Subnet</div>
+                </div>
+            </div>
+            <div class="inner-heading">Storage Quota</div>
+            <div class="chart-wrap row">
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="storageSize" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Size</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="storageSnapshot" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Snapshot</div>
+                </div>
+                <div class="chart col-lg-4 col-xs-12">
+                    <p-chart type="doughnut" width="110px" height="110px" [data]="storageVolumn" [options]="tabOptions"></p-chart>
+                    <div class="chart-name">Volumes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-metric col-lg-8 col-xs-12">
+        <div class="main-content">
+            <div class="inner-heading">Performance Metric</div>
+            <div class="threshold-table table-wrap">
+                <p-table [value]="vimThresholds" [scrollable]="true" [style]="{width: '100%'}" scrollHeight="300px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col" class="text-center" *ngFor="let threshold of vimThresholds">{{threshold['performanceMetric']}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Threshold</th>
+                            <th scope="col" class="text-center" *ngFor="let threshold of vimThresholds">{{threshold['simpleThresholdDetails']['thresholdValue']}} &plusmn; {{threshold['simpleThresholdDetails']['hysteresis']}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-threshold>
+                        <ng-container *ngFor="let hypervisor of hypervisors">
+                            <tr *ngIf="hypervisor?.reportData">
+                                <td>{{hypervisor?.hypervisorName}} - {{hypervisor?.hostIP}}</td>
+                                <ng-container *ngFor="let report of hypervisor?.reportData">
+                                    <td *ngIf="report?.performanceMetric === threshold['performanceMetric']">
+                                        <span *ngIf="report?.performanceValue?.performanceValue > (threshold['simpleThresholdDetails']['thresholdValue'] + threshold['simpleThresholdDetails']['hysteresis']) || report?.performanceValue?.performanceValue < (threshold['simpleThresholdDetails']['thresholdValue'] - threshold['simpleThresholdDetails']['hysteresis'])">{{report?.performanceValue?.performanceValue}}</span>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="vimThresholds?.length + 1">
+                                {{'table.emptyMessage' | translate}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content child-urls">
+    <div class="url-wrap">
+        <a routerLink="user-vim">
+            <img src="../../../../../content/images/user.png" alt="icon"/>{{'mano.userVim.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="project">
+            <img src="../../../../../content/images/folder.png" alt="icon"/>{{'mano.project.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="role">
+            <img src="../../../../../content/images/lock.png" alt="icon"/>{{'mano.role.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="image">
+            <img src="../../../../../content/images/image.png" alt="icon"/>{{'mano.image.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="network">
+            <img src="../../../../../content/images/network.png" alt="icon"/>{{'mano.network.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="server-group">
+            <img src="../../../../../content/images/server.png" alt="icon"/>{{'mano.servergroup.breadcrumb' | translate}}
+        </a>
+    </div>
+    <div class="url-wrap">
+        <a routerLink="software">
+            <img src="../../../../../content/images/software.png" alt="icon"/>{{'mano.software.breadcrumb' | translate}}
+        </a>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup vim-role-dialog" blockScroll="true" appendTo="body" header="Grant Vim Role" (onHide)="vimRoleForm.reset()" [(visible)]="isDisplayGrantVimRole" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'max-width': '80vw', 'width': '800px'}">
+    <form name="vimRoleForm" (ngSubmit)="grantVimRole()" class="vim-role-form" #vimRoleForm="ngForm">
+        <table class="vim-role-table">
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Mano User*</td>
+                <td>
+                    <select name="manoUser" [(ngModel)]="grantVimRoleRequest.manoUserGrantedId" #manoUserGrantedId="ngModel" required>
+                        <option disabled value="null">- Select user -</option>
+                        <option *ngFor="let userMano of userManos" [ngValue]="userMano.id">{{userMano.username}}</option>
+                    </select>
+                    <div *ngIf="manoUserGrantedId.errors?.required && manoUserGrantedId.touched" class="mess_valid">
+                        Mano User is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Vim Role*</td>
+                <td>
+                    <select name="vimRole" [(ngModel)]="grantVimRoleRequest.vimRole" #vimRole="ngModel" required>
+                        <option disabled value="null">- Select role -</option>
+                        <option value="VIM_ROLE_ADMIN">ROLE ADMIN</option>
+                        <option value="VIM_ROLE_MEMBER">ROLE MEMBER</option>
+                    </select>
+                    <div *ngIf="vimRole.errors?.required && vimRole.touched" class="mess_valid">
+                        Vim Role is required
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="popup-btns">
+            <button type="submit" class="mano-btn" [disabled]="vimRoleForm.form.invalid || isSaving">Save</button>
+            <button type="button" (click)="vimRoleForm.reset(); resetForm()" class="sub-btn mano-btn" jhiTranslate="entity.action.reset">Reset</button>
+        </div>
+    </form>
+</p-dialog>

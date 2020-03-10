@@ -1,0 +1,29 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  .table-wrap {
+    ::ng-deep table {
+      tr {
+        td {
+          &:nth-of-type(3) {
+            a {
+              color: $base-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  table {
+    margin: auto;
+
+    tr {
+      td {
+        padding: 8px 10px;
+      }
+    }
+  }
+}

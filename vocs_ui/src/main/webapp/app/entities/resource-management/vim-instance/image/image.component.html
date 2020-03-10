@@ -1,0 +1,184 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.image.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate"
+            (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')" />
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="data" (onFilter)="check()" [first]="first" (onSort)="onSortOrPage()"
+            (onPage)="onSortOrPage()"
+            [globalFilterFields]="['name', 'status', 'minDisk', 'minRam', 'diskFormat', 'containerFormat']"
+            [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selecteds" binary="true" [(ngModel)]="isCheckAll" (onChange)="checkAll()">
+                        </p-checkbox>
+                    </th>
+                    <th scope="col">
+                        <div [hidden]="selecteds.length === 0"><button (click)="confirmDelete()"
+                                [hidden]="!isAdmin"><img src="../../../../../content/images/trash-simple 4.png"
+                                    alt="icon"></button></div>
+                        <div [hidden]="selecteds.length !== 0">{{'mano.image.title' | translate}}</div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" [hidden]="!isAdmin" class="text-right">
+                        <button class="mano-btn-table-head" (click)="isDisplayCreate = true">Add New</button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-image>
+                <tr>
+                    <td *ngIf="isAdmin" style="width: 65px;">
+                        <p-checkbox name="selectedItem" [value]="image" [(ngModel)]="selecteds" (onChange)="check()">
+                        </p-checkbox>
+                    </td>
+                    <td class="text-left">{{image.name}}</td>
+                    <td>{{image.status}}</td>
+                    <td>{{image.minDisk}}</td>
+                    <td>{{image.minRam}}</td>
+                    <td>{{image.diskFormat}}</td>
+                    <td>{{image.containerFormat}}</td>
+                    <td [hidden]="!isAdmin" class="text-right">
+                        <span class="table-action" [pTooltip]="'entity.action.delete' | translate"
+                            (click)="confirmDelete(image.id)" [hidden]="!isAdmin">
+                            <img src="../../../../../content/images/delete.png" alt="icon" />
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="isAdmin ? 8 : 6">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog styleClass="popup-edit vocs-popup add-image-dialog" blockScroll="true" appendTo="body" header="Create Image"
+    [(visible)]="isDisplayCreate" [responsive]="true" showEffect="fade" [modal]="true" (onHide)="imageForm.reset()"
+    (onShow)="showImageDialog(imageForm, chooseFile);" [style]="{'max-width': '80vw', width: '800px'}">
+    <form name="imageForm" (ngSubmit)="imageForm.form.valid && save()" class="image-form" #imageForm="ngForm">
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td style="width: 30%;">Name*</td>
+                <td>
+                    <input type="text" (blur)="newImage.name=newImage.name.trim()" pattern="[A-Za-z0-9 _-]+" name="name"
+                        [(ngModel)]="newImage.name" #name="ngModel" minlength="3" maxlength="20" required>
+                    <div *ngIf="name.errors?.pattern" class="mess_valid">
+                        Name must not be contains special characters.
+                    </div>
+                    <div *ngIf="name.errors?.minlength || name.errors?.maxlength" class="mess_valid">
+                        Name must be between 3 - 20 characters.
+                    </div>
+                    <div *ngIf="name.errors?.required && name.touched" class="mess_valid">
+                        Name is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Min Disk*</td>
+                <td>
+                    <input pattern="^[0-9]+$" (keypress)="commonUtil.blockSpecial($event)" type="text" name="minDisk"
+                        [class.invalid]="checkNumber(1, 1048576, minDisk.value)" #minDisk="ngModel"
+                        [(ngModel)]="newImage.minDisk" #minDisk="ngModel" required>
+                    <div *ngIf="minDisk.errors?.pattern || checkNumber(1,1048576,minDisk.value) && !minDisk.errors?.required"
+                        class="mess_valid">
+                        Min Disk value must be valid from 1 - 1048576.
+                    </div>
+                    <div *ngIf="minDisk.errors?.required && minDisk.touched" class="mess_valid">
+                        Min Disk is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Min RAM*</td>
+                <td>
+                    <input pattern="^[0-9]+$" (keypress)="commonUtil.blockSpecial($event)" type="text" name="minRam"
+                        [class.invalid]="checkNumber(1, 1048576, minRam.value)" #minRam="ngModel"
+                        [(ngModel)]="newImage.minRam" #minRam="ngModel" required>
+                    <div *ngIf="minRam.errors?.pattern || checkNumber(1,1048576,minRam.value) && !minRam.errors?.required"
+                        class="mess_valid">
+                        Min Ram value must be valid from 1 - 1048576.
+                    </div>
+                    <div *ngIf="minRam.errors?.required && minRam.touched" class="mess_valid">
+                        Min RAM is required
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Disk Format*</td>
+                <td>
+                    <select name="diskFormat" [(ngModel)]="newImage.diskFormat" #diskFormat="ngModel" required>
+                        <option disabled selected [ngValue]="null">- Select -</option>
+                        <option *ngFor="let item of diskFormats; let i = index" [ngValue]="item">{{item}}</option>
+                    </select>
+                    <div *ngIf="diskFormat.invalid && (diskFormat.dirty || diskFormat.touched)">
+                        <div *ngIf="diskFormat.errors?.required" class="mess_valid">
+                            Disk Format is required.
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Container Format*</td>
+                <td>
+                    <select name="containerFormat" [(ngModel)]="newImage.containerFormat" #containerFormat="ngModel"
+                        required>
+                        <option disabled selected [ngValue]="null">- Select -</option>
+                        <option *ngFor="let item of containerFormats; let i = index" [ngValue]="containerFormats[i]">
+                            {{containerFormats[i]}}
+                        </option>
+                    </select>
+                    <div *ngIf="containerFormat.invalid && (containerFormat.dirty || containerFormat.touched)">
+                        <div *ngIf="containerFormat.errors?.required" class="mess_valid">
+                            Container Format is required.
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>File*</td>
+                <td>
+                    <input type="text" name="file" [(ngModel)]="filePath" #file="ngModel" class="file-path" readonly
+                        required>
+                    <div class="choose-file">
+                        <button class="mano-btn ">Browse</button>
+                        <input type="file" name="chooseFile" [value]="chooseNameFile" (change)="onSelectFile($event)"
+                            #chooseFile required>
+                    </div>
+                    <div *ngIf="chooseFile['invalid'] && (chooseFile['dirty'] || chooseFile['touched']) || hasErrorFileSize"
+                        class="mess_valid">
+                        <small>
+                            The maximum file size allowed is 200MB.
+                        </small>
+                    </div>
+                    <div *ngIf="file.errors?.required && file.touched" class="mess_valid">
+                        File is required.
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="popup-btns">
+            <button class="mano-btn" type="submit"
+                [disabled]="imageForm.form.pristine || imageForm.form.invalid || hasErrorFileSize || checkNumber(1,1048576,minDisk.value) || checkNumber(1,1048576,minRam.value)">Save</button>
+            <button class="sub-btn mano-btn" type="reset" (click)="reset()">Reset</button>
+        </div>
+    </form>
+</p-dialog>

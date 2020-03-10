@@ -1,0 +1,39 @@
+{
+  "global": {
+    "title": "vMANO",
+    "menu": {
+      "home": "Home",
+      "account": {
+        "login": "Sign in",
+        "logout": "Sign out"
+      }
+    },
+    "footer": "vNFV - Network Function Virtualization by Viettel"
+  },
+  "entity": {
+    "action": {
+      "upload": "Upload",
+      "download": "Download",
+      "edit": "Edit",
+      "reset": "Reset",
+      "delete": "Delete",
+      "search": "Search",
+      "logout": "Log out",
+      "add": "Add",
+      "addAll": "Add All",
+      "remove": "Remove",
+      "removeAll": "Remove All",
+      "save": "Save",
+      "cancel": "Cancel",
+      "apply": "Apply"
+    },
+    "detail": {},
+    "delete": {},
+    "validation": {}
+  },
+  "table": {
+    "emptyMessage": "No entries found"
+  },
+  "error": {},
+  "vOcsApp": "vMANO"
+}

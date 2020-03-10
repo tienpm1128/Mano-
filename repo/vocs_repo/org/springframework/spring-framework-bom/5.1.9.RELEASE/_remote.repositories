@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Sep 03 16:00:25 ICT 2019
+spring-framework-bom-5.1.9.RELEASE.pom>repository.spring.milestone=
+spring-framework-bom-5.1.9.RELEASE.pom>central=

@@ -1,0 +1,10 @@
+{
+  "mano": {
+    "supportingService": {
+      "title": "Supporting Service",
+      "service": "Service",
+      "support": "Supporting Service",
+      "mano": "Mano"
+    }
+  }
+}

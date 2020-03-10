@@ -1,0 +1,25 @@
+{
+  "login": {
+    "title": "Log in",
+    "form": {
+      "username.placeholder": "Username",
+      "password": "Password",
+      "password.placeholder": "Password",
+      "rememberMe": "Remember me",
+      "button": "Log in"
+    },
+    "messages": {
+      "error": {
+        "authentication": "Invalid username or password",
+        "invalidIP": "Invalid IP",
+        "invalidControllerIP": "Invalid Controller IP",
+        "invalidSubnet": "Invalid subnet mask",
+        "invalidLatitude": "Invalid latitude",
+        "invalidLongitude": "Invalid longitude"
+      }
+    },
+    "password": {
+      "forgot": "Did you forget your password?"
+    }
+  }
+}

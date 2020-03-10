@@ -1,0 +1,75 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  .table-wrap {
+    ::ng-deep table {
+      tr {
+        td {
+          &:nth-of-type(3) {
+            a {
+              color: $base-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  table {
+    width: 100%;
+
+    tr {
+      td {
+        padding: 8px 10px;
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .login-vim {
+    text-align: center;
+    font-size: $font-size-lg;
+
+    a {
+      color: #007bff;
+    }
+  }
+}
+
+.second {
+  width: 35%;
+  min-width: 0;
+}
+
+.second1 {
+  width: 30%;
+  min-width: 0;
+}
+
+.dateselect {
+  width: 40%;
+  margin-left: 5px;
+  min-width: 0;
+}
+
+.mess_valid_01 {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.icon_size {
+  font-size: 25px;
+}
+
+p-listbox {
+  ::ng-deep div {
+    padding: 5px !important;
+  }
+}

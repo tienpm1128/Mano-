@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="vocs-service">
+    <output-path>$PROJECT_DIR$/out/artifacts/vocs_service</output-path>
+    <root id="archive" name="vocs-service.jar" />
+  </artifact>
+</component>

@@ -1,0 +1,41 @@
+<breadcrumb></breadcrumb>
+<div class="page-heading">{{'mano.nsdNotifications.title' | translate}}</div>
+<div class="search-btn-wrap">
+    <div class="search-box">
+        <input type="text" pInputText [placeholder]="'entity.action.search' | translate" (input)="dt.filterGlobal($event.target['value'].trim(), 'contains')">
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="table-wrap">
+        <p-table #dt [value]="nsdNotifications" [globalFilterFields]="['id', 'notificationType', 'subscriptionId', 'nsdId', 'timeStamp']" [paginator]="true" [pageLinks]="4" [rowsPerPageOptions]="[10, 20, 30]" [rows]="10">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col" >{{'mano.nsdNotifications.title' | translate}}
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col" >
+                    </th>
+                    <th scope="col" style="width: 10%;">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nsNotification>
+                <tr>
+                    <td>{{nsNotification.notificationType}}</td>
+                    <td>{{nsNotification.subscriptionId}}</td>
+                    <td>{{nsNotification.nsdId}}</td>
+                    <td>{{nsNotification.timeStamp | date: 'HH:mm:ss'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="4">
+                        {{'table.emptyMessage' | translate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

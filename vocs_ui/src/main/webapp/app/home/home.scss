@@ -1,0 +1,67 @@
+@import '../../content/scss/vars';
+
+.login-wrap {
+  background-image: url(../../content/images/login-page.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  .form-wrap {
+    text-align: center;
+    width: 515px;
+    background: $slave-color;
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 45px;
+
+    .logo {
+      width: 215px;
+      margin-bottom: 45px;
+    }
+
+    .login-form {
+      .form-group {
+        padding: 12px 0;
+        border-bottom: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+
+        img {
+          width: 24px;
+          margin-right: 12px;
+        }
+
+        input {
+          border: none;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        &.invalid {
+          border-bottom: 1px solid $base-color;
+          margin-bottom: 5px;
+        }
+      }
+
+      .mano-btn {
+        display: block;
+        width: 100%;
+        margin-left: 0 !important;
+        margin-bottom: 15px;
+      }
+
+      .alert {
+        border: none;
+        border-radius: 6px;
+        margin: 0;
+      }
+    }
+  }
+}

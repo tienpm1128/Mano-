@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>vdashboardx</artifactId>
+    <name>vDashboardX</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.viettel.nfv</groupId>
+        <artifactId>vparent</artifactId>
+        <version>1.6</version>
+    </parent>
+
+    <modules>
+        <module>value-objects</module>
+        <module>communication</module>
+        <module>main</module>
+        <module>configuration</module>
+        <module>shared</module>
+        <module>fm-authentication</module>
+        <module>fm-errormanagement</module>
+        <module>fm-resourcemanagement</module>
+        <module>fm-networkservice</module>
+        <module>fm-performancemanagement</module>
+        <module>fm-notifications</module>
+        <module>fm-othermanagement</module>
+    </modules>
+
+  </project>

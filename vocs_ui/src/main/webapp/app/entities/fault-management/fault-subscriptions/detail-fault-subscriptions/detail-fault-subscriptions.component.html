@@ -1,0 +1,53 @@
+<breadcrumb></breadcrumb>
+<div class="main-content">
+    <div class="detail-wrap">
+        <div class="page-heading">Subscription - {{faultSubscriptionsDetail?.id}}</div>
+        <table>
+            <caption></caption>
+            <tr style="display: none;">
+                <th scope="col"></th>
+            </tr>
+            <tr>
+                <td>Callback URI</td>
+                <td>{{faultSubscriptionsDetail?.callbackUri}}</td>
+            </tr>
+            <tr>
+                <td>Links</td>
+                <td>{{faultSubscriptionsDetail?._links?.self?.href}}</td>
+            </tr>
+            <tr>
+                <td>Notification Type</td>
+                <td>
+                    <ng-container *ngFor="let notificationType of faultSubscriptionsDetail?.filter?.notificationTypes; let i = index">{{notificationType}}<ng-container *ngIf="i !== faultSubscriptionsDetail?.filter?.notificationTypes?.length - 1">, </ng-container></ng-container>
+                </td>
+            </tr>
+            <tr>
+                <td>Ns Instance Subscription Filter</td>
+                <td>{{faultSubscriptionsDetail?.filter?.faultyResourceTypes}}</td>
+            </tr>
+            <tr>
+                <td>Fauly Resource Type</td>
+                <td>
+                    <ng-container *ngFor="let faultyResourceType of faultSubscriptionsDetail?.filter?.faultyResourceTypes; let i = index">{{faultyResourceType}}<ng-container *ngIf="i !== faultSubscriptionsDetail?.filter?.perceivedSeverities?.length - 1">, </ng-container></ng-container>
+                </td>
+            </tr>
+            <tr>
+                <td>Perceived Severities</td>
+                <td>
+                    <ng-container *ngFor="let perceivedSeverity of faultSubscriptionsDetail?.filter?.perceivedSeverities; let i = index">{{perceivedSeverity}}<ng-container *ngIf="i !== faultSubscriptionsDetail?.filter?.perceivedSeverities?.length - 1">, </ng-container></ng-container>
+                </td>
+            </tr>
+            <tr>
+                <td>Event Types</td>
+                <td>
+                    <ng-container *ngFor="let eventType of faultSubscriptionsDetail?.filter?.eventTypes; let i = index">{{eventType}}<ng-container *ngIf="i !== faultSubscriptionsDetail?.filter?.eventTypes?.length - 1">, </ng-container></ng-container>
+                </td>
+            </tr>
+            <tr>
+                <td>Probable Causes</td>
+                <td>{{faultSubscriptionsDetail?.filter?.probableCauses}}</td>
+            </tr>
+        </table>
+    </div>
+    <button class="mano-btn" [routerLink]="['/nsfm/subscription']">Back to list</button>
+</div>

@@ -1,0 +1,10 @@
+.table-wrap {
+  ::ng-deep table {
+    tr {
+      td {
+        white-space: normal;
+        word-break: normal;
+      }
+    }
+  }
+}

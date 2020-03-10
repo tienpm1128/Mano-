@@ -1,0 +1,139 @@
+@import '../../../../../content/scss/vars';
+
+.main-content {
+  .table-wrap {
+    ::ng-deep table {
+      tr {
+        td {
+          &:nth-of-type(3) {
+            a {
+              color: $base-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .popup-edit {
+  table {
+    width: 100%;
+
+    tr {
+      td {
+        padding: 8px 10px;
+        vertical-align: top;
+
+        select {
+          width: 329px;
+        }
+
+        &:first-of-type {
+          text-align: left !important;
+        }
+      }
+    }
+  }
+}
+
+.mess_valid_01 {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.criteria_box {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px #e5e5e5 solid;
+
+  .title {
+    font-size: $font-size-xl;
+    font-weight: $bold;
+  }
+
+  > table {
+    tr {
+      td {
+        &:first-of-type {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+
+  .criteria_box_1 {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px #e5e5e5 solid;
+    display: flex;
+    flex-wrap: wrap;
+
+    .title {
+      width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      width: 50%;
+      padding-right: 15px;
+
+      label {
+        margin: 0 10px 0 0;
+        line-height: 32px;
+        white-space: nowrap;
+      }
+
+      .input-wrap {
+        input {
+          width: auto;
+        }
+      }
+    }
+  }
+}
+
+.input_width_1 {
+  margin-right: 1px;
+  width: 25%;
+  min-width: 0;
+}
+
+@media only screen and (max-width: 768px) {
+  ::ng-deep .popup-edit {
+    .ui-dialog-content {
+      form {
+        .criteria_box {
+          .criteria_box_1 {
+            table {
+              tr {
+                display: block;
+
+                td {
+                  display: block;
+
+                  .form-group {
+                    width: 100% !important;
+                    padding-right: 8px !important;
+
+                    label {
+                      min-width: 145px;
+                    }
+
+                    .input-wrap {
+                      width: 100%;
+
+                      input {
+                        width: 100% !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

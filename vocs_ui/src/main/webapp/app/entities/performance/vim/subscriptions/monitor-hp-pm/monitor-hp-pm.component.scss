@@ -1,0 +1,69 @@
+@import '../../../../../../content/scss/vars';
+
+.main-content {
+  padding: 54px;
+
+  .detail-wrap {
+    display: flex;
+
+    .vnf-wrap {
+      margin-left: 100px;
+      display: flex;
+      flex-direction: column;
+
+      .heading {
+        font-size: $font-size-md + 1px;
+      }
+
+      .vnf {
+        display: flex;
+        margin-top: 10px;
+
+        .select-chart {
+          margin-left: 23px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+
+          .mano-btn {
+            margin-top: 20px;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .main-content {
+    .detail-wrap {
+      display: block;
+
+      .vnf-wrap {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .main-content {
+    .detail-wrap {
+      .vnf-wrap {
+        .vnf {
+          display: block;
+
+          ::ng-deep .ui-listbox {
+            width: 100%;
+          }
+
+          .select-chart {
+            margin-top: 15px;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+}
