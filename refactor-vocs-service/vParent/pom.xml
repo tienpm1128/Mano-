@@ -37,7 +37,7 @@
         <version.maven.release.plugin>2.5.3</version.maven.release.plugin>
         <version.exec.maven.plugin>1.6.0</version.exec.maven.plugin>
 
-        <version.security.oauth2>2.3.4.RELEASE</version.security.oauth2>
+        <version.security.oauth2>2.3.6.RELEASE</version.security.oauth2>
         <version.security.jwt>1.0.9.RELEASE</version.security.jwt>
         <version.jaxb-runtime>2.4.0-b180830.0438</version.jaxb-runtime>
 
