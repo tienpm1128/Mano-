@@ -17,7 +17,7 @@
         <version.springframework>5.2.4.RELEASE</version.springframework>
         <version.springframework.security>5.2.2.RELEASE</version.springframework.security>
         <version.springframework.session>2.2.1.RELEASE</version.springframework.session>
-        <version.spring.boot>2.2.5.RELEASE</version.spring.boot>
+        <version.spring.boot>2.5.12</version.spring.boot>
         <version.spring.cloud>2.2.1.RELEASE</version.spring.cloud>
         <version.spring.data.elasticsearch>3.2.5.RELEASE</version.spring.data.elasticsearch>
 
