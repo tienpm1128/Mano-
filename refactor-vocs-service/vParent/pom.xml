@@ -29,7 +29,7 @@
         <version.slf4j>1.7.25</version.slf4j>
         <version.logback>1.2.3</version.logback>
         <version.lombok>1.18.2</version.lombok>
-        <version.jackson.databind>2.9.7</version.jackson.databind>
+        <version.jackson.databind>2.13.4.1</version.jackson.databind>
         <version.testng>6.14.3</version.testng>
 
         <version.maven.compiler.plugin>3.8.0</version.maven.compiler.plugin>
